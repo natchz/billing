@@ -35,7 +35,11 @@ def save_ack(ws_resp):
     #write the ack from the sending fucntion
     pass
 
-def invoice_to_xml():
+def invoice_to_xml(UBLExtensions_0,UBLExtensions_1,UBLVersionID,CustomizationID,
+                   ProfileID,ID,UUID,IssueDate,IssueTime,InvoiceTypeCode,Note,
+                   DocumentCurrencyCode,AccountingSupplierParty ,
+                   AccountingCustomerParty ,TaxTotal,LegalMonetaryTotal,
+                   InvoiceLine):
     #http://forums.whirlpool.net.au/archive/1975786
     from lxml import etree
     from lxml.builder import ElementMaker
@@ -57,6 +61,11 @@ def invoice_to_xml():
         namespace=NSMAP['fe'],
         nsmap=NSMAP
     )
+
+    ext_e = ElementMaker(
+        namespace=NSMAP['ext'],
+        nsmap=NSMAP)
+
     cac_e = ElementMaker(
         namespace=NSMAP['cac'],
         nsmap=NSMAP
@@ -65,23 +74,28 @@ def invoice_to_xml():
         namespace=NSMAP['cbc'],
         nsmap=NSMAP
     )
-    cbc_e.UBLVersionID
-    cbc_e.CustomizationID
-    cbc_e.ProfileID
-    cbc_e.UUID
-    cbc_e.IssueTime
-    fe_e.AccountingSupplierParty
     root = fe_e.Invoice(
-    cbc_e.UBLVersionID,
-    cbc_e.CustomizationID,
-    cbc_e.ProfileID,
-    cbc_e.UUID,
-    cbc_e.IssueTime,
-    fe_e.AccountingSupplierParty
+    ext_e.UBLExtensions(UBLExtensions_0)
+    ,ext_e.UBLExtensions(UBLExtensions_1)
+    ,cbc_e.UBLVersionID(UBLVersionID)
+    ,cbc_e.CustomizationID(CustomizationID)
+    ,cbc_e.ProfileID(ProfileID)
+    ,cbc_e.ID(ID)
+    ,cbc_e.UUID(UBLVersionID)
+    ,cbc_e.IssueDate(IssueDate)
+    ,cbc_e.IssueTime(IssueTime)
+    ,cbc_e.InvoiceTypeCode(InvoiceTypeCode)
+    ,cbc_e.Note(Note)
+    ,cbc_e.DocumentCurrencyCode(DocumentCurrencyCode)
+    ,fe_e.AccountingSupplierParty(AccountingSupplierParty)
+    ,fe_e.AccountingCustomerParty(AccountingCustomerParty)
+    ,fe_e.TaxTotal(TaxTotal)
+    ,fe_e.LegalMonetaryTotal(LegalMonetaryTotal)
+    ,fe_e.InvoiceLine(InvoiceLine)
     )
 
     #print(etree.tostring(root,xml_declaration=True,encoding='UTF-8',pretty_print=True))
-    etree.ElementTree(root).write("inv.xml", pretty_print=True)
+    etree.ElementTree(root).write("inv.xml", xml_declaration=True,encoding='UTF-8',standalone=False,pretty_print=True)
 
 
 """
@@ -97,7 +111,7 @@ def invoice_to_xml():
     """
 
 if __name__ == "__main__":
-    invoice_to_xml()
+    invoice_to_xml("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17")
     #send_invoice()
     #flow:
     #read_file > to_xml > to_ws > get_resp > send_html mail

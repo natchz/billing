@@ -1,3 +1,4 @@
+UBLExtensions		 ,UBLExtensions 		 ,UBLVersionID 		 ,CustomizationID		 ,ProfileID			 ,ID					 ,UUID					 ,IssueDate			 ,IssueTime			 ,InvoiceTypeCode		 ,Note					 ,DocumentCurrencyCode	 ,AccountingSupplierParty ,AccountingCustomerParty ,TaxTotal				 ,LegalMonetaryTotal	 ,InvoiceLine
 NSMAP = {
 	"fe":"http://www.dian.gov.co/contratos/facturaelectronica/v1"
 	,"cac":"urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
@@ -17,6 +18,11 @@ NSMAP = {
         namespace=NSMAP['fe'],
         nsmap=NSMAP
     )
+    ext_e = ElementMaker(
+        annotate=False,
+        namespace=NSMAP['ext'],
+        nsmap=NSMAP)
+
     cac_e = ElementMaker(
         annotate=False,
         namespace=NSMAP['cac'],
@@ -26,3 +32,6 @@ NSMAP = {
         annotate=False,
         namespace=NSMAP['cbc'],
         nsmap=NSMAP)
+
+
+<ext:UBLExtensions> …… </ext:UBLExtensions> [1]  <cbc:UBLVersionID> …… </cbc:UBLVersionID> [1]  <cbc:CustomizationID> …… </cbc:CustomizationID> [1]  <cbc:ProfileID> …… </cbc:ProfileID> [1]  <cbc:ID> …… </cbc:ID> [1]  <cbc:UUID> …… </cbc:UUID> [1]  <cbc:IssueDate> …… </cbc:IssueDate> [1]  <cbc:IssueTime> …… </cbc:IssueTime> [1]  <cbc:InvoiceTypeCode> …… </cbc:InvoiceTypeCode> [1]  <cbc:Note> …… </cbc:Note> [0……*]  <cbc:DocumentCurrencyCode> …… </cbc:DocumentCurrencyCode> [1]  <fe:AccountingSupplierParty> …… </fe:AccountingSupplierParty> [1]  <fe:AccountingCustomerParty> …… </fe:AccountingCustomerParty> [1]  <fe:TaxTotal> …… </fe:TaxTotal> [1……*]  <fe:LegalMonetaryTotal> …… </fe:LegalMonetaryTotal> [1]  <tns:InvoiceLine> …… </fe:InvoiceLine> [1……*]
