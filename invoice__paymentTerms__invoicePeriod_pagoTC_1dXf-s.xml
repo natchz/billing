@@ -1,0 +1,114 @@
+<fe:Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:clm54217="urn:un:unece:uncefact:codelist:specification:54217:2001" xmlns:clm66411="urn:un:unece:uncefact:codelist:specification:66411:2001" xmlns:clmIANAMIMEMediaType="urn:un:unece:uncefact:codelist:specification:IANAMIMEMediaType:2003" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2" xmlns:sts="http://www.dian.gov.co/contratos/facturaelectronica/v1/Structures" xmlns:udt="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fe="http://www.dian.gov.co/contratos/facturaelectronica/v1" xsi:schemaLocation="http://www.dian.gov.co/contratos/facturaelectronica/v1 http://www.dian.gov.co/micrositios/fac_electronica/documentos/XSD/r0/DIAN_UBL.xsd urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2 http://www.dian.gov.co/micrositios/fac_electronica/documentos/common/UnqualifiedDataTypeSchemaModule-2.0.xsd urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2 http://www.dian.gov.co/micrositios/fac_electronica/documentos/common/UBL-QualifiedDatatypes-2.0.xsd">
+<ext:UBLExtensions>
+<ext:UBLExtension>
+<ext:ExtensionContent/>
+</ext:UBLExtension>
+</ext:UBLExtensions>
+<cbc:UBLVersionID/>
+<cbc:ProfileID/>
+<cbc:ID/>
+<cbc:UUID/>
+<cbc:IssueDate>1957-08-13</cbc:IssueDate>
+<cbc:IssueTime>06:11:31</cbc:IssueTime>
+<cbc:InvoiceTypeCode/>
+<cbc:Note>
+Set de ejemplificación; este documento no fue diseñado para obtener resultado de "factura exitosa" en el SIEFE de la DIAN; está hecho para ejemplificar el uso de elementos UBL, y es un documento válido para el motor de esquemas .XSD
+</cbc:Note>
+<cbc:Note>
+2016-12-13: Observación: ejemplificación de uso de conceptos comerciales y fiscales:
+</cbc:Note>
+<cbc:Note>
+item con detalle de vigencia de la factura: xPath: /fe:Invoice/cac:InvoicePeriod
+</cbc:Note>
+<cbc:Note>
+item con detalle de términos y condiciones de pago /fe:Invoice/cac:PaymentTerms[1]
+</cbc:Note>
+<cbc:Note>
+Se describe un modelo de negociación con pago con TC
+</cbc:Note>
+<cbc:Note/>
+<cbc:DocumentCurrencyCode/>
+<cac:InvoicePeriod>
+<cbc:DurationMeasure unitCode="DAY">0</cbc:DurationMeasure>
+<cbc:Description languageID="es-CO">
+El elemento /fe:Invoice/cac:InvoicePeriod/cbc:DurationMeasure contiene el lapso para el pago de la factura electrónica emitida
+</cbc:Description>
+<cbc:Description languageID="es-CO">
+utilice @unitCode desde URL https://docs.oasis-open.org/ubl/cs-UBL-2.0/xsd/common/CodeList_UnitCode_UNECE_7_04.xsd;
+</cbc:Description>
+<cbc:Description languageID="es-CO">
+Medición de la vigencia desde elemento /fe:Invoice/cbc:IssueDate;
+</cbc:Description>
+<cbc:Description languageID="es-CO">
+la oportunidad de la entrega a la autoridad tributaria se mide desde el momento registrado en el elemento /fe:Invoice/ext:UBLExtensions/ext:UBLExtension[X]/ext:ExtensionContent/ds:Signature/ds:Object/xades:QualifyingProperties/xades:SignedProperties/xades:SignedSignatureProperties/xades:SigningTime;
+</cbc:Description>
+<cbc:Description languageID="es-CO"/>
+</cac:InvoicePeriod>
+<fe:AccountingSupplierParty>
+<cbc:AdditionalAccountID/>
+<fe:Party>
+<cac:PartyIdentification>
+<cbc:ID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)" schemeID="31"/>
+</cac:PartyIdentification>
+<fe:PhysicalLocation/>
+<fe:PartyTaxScheme>
+<cbc:TaxLevelCode/>
+<cac:TaxScheme/>
+</fe:PartyTaxScheme>
+</fe:Party>
+</fe:AccountingSupplierParty>
+<fe:AccountingCustomerParty>
+<cbc:AdditionalAccountID/>
+<fe:Party>
+<cac:PartyIdentification>
+<cbc:ID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)" schemeID="31"/>
+</cac:PartyIdentification>
+<fe:PhysicalLocation/>
+<fe:PartyTaxScheme>
+<cbc:TaxLevelCode/>
+<cac:TaxScheme/>
+</fe:PartyTaxScheme>
+</fe:Party>
+</fe:AccountingCustomerParty>
+<cac:PaymentMeans>
+<cbc:ID>1000</cbc:ID>
+<cbc:PaymentMeansCode listName="4461 Payment means code; códigos de medios de pago" listURI="http://www.unece.org/trade/untdid/d16a/tred/tred4461.htm" name="54 Credit card">54</cbc:PaymentMeansCode>
+<cbc:PaymentChannelCode listName="4435 Payment channel code; códigos de canales de pago" listURI="http://www.unece.org/trade/untdid/d16a/tred/tred4435.htm" name="9 Personal (face-to-face)">9</cbc:PaymentChannelCode>
+<cbc:InstructionNote>1. instrucción</cbc:InstructionNote>
+<cbc:InstructionNote>2. instrucción</cbc:InstructionNote>
+<cac:CardAccount>
+<cbc:PrimaryAccountNumberID>0123456789ABCDEF</cbc:PrimaryAccountNumberID>
+<cbc:NetworkID>VISA</cbc:NetworkID>
+<cbc:CV2ID>123</cbc:CV2ID>
+<cbc:HolderName>Nombre Apellido</cbc:HolderName>
+</cac:CardAccount>
+</cac:PaymentMeans>
+<fe:TaxTotal>
+<cbc:TaxAmount currencyID="COP">0.00</cbc:TaxAmount>
+<cbc:TaxEvidenceIndicator>true</cbc:TaxEvidenceIndicator>
+<fe:TaxSubtotal>
+<cbc:TaxableAmount currencyID="COP">0.00</cbc:TaxableAmount>
+<cbc:TaxAmount currencyID="COP">0.00</cbc:TaxAmount>
+<cbc:Percent>0.00</cbc:Percent>
+<cac:TaxCategory>
+<cac:TaxScheme>
+<cbc:ID>01</cbc:ID>
+</cac:TaxScheme>
+</cac:TaxCategory>
+</fe:TaxSubtotal>
+</fe:TaxTotal>
+<fe:LegalMonetaryTotal>
+<cbc:LineExtensionAmount currencyID="COP">0.00</cbc:LineExtensionAmount>
+<cbc:TaxExclusiveAmount currencyID="COP">0.00</cbc:TaxExclusiveAmount>
+<cbc:PayableAmount currencyID="COP">0.00</cbc:PayableAmount>
+</fe:LegalMonetaryTotal>
+<fe:InvoiceLine>
+<cbc:ID>1</cbc:ID>
+<cbc:InvoicedQuantity>1</cbc:InvoicedQuantity>
+<cbc:LineExtensionAmount currencyID="COP">0.00</cbc:LineExtensionAmount>
+<fe:Item/>
+<fe:Price>
+<cbc:PriceAmount currencyID="COP">0.00</cbc:PriceAmount>
+</fe:Price>
+</fe:InvoiceLine>
+</fe:Invoice>

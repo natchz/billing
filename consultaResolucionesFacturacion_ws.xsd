@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.dian.gov.co/servicios/facturaelectronica/ConsultaResolucionFacturacion"
+	xmlns:tns="http://www.dian.gov.co/servicios/facturaelectronica/ConsultaResolucionFacturacion"
+	xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
+	elementFormDefault="qualified">
+	
+	<element name="ConsultaResolucionesFacturacionPeticion" type="tns:ConsultaResoluciones"/>
+	
+	<element name="ConsultaResolucionesFacturacionRespuesta" type="tns:ResolucionesFacturacion"/>
+	
+	
+	<!-- REQUEST -->
+	<complexType name="ConsultaResoluciones">
+		<annotation>
+			<documentation>Envoltorio para consultar resoluciones de facturacion por medio de web service</documentation>
+		</annotation>
+		<sequence>
+			<element name="NITObligadoFacturarElectronicamente" type="tns:NitType"/>
+			<element name="NITProveedorTecnologico" type="tns:NitType"/>
+			<element name="IdentificadorSoftware" type="string" minOccurs="1" maxOccurs="1"/>
+		</sequence>
+	</complexType>
+	
+	
+	<!-- RESPONSE -->
+	<complexType name="ResolucionesFacturacion">
+		<sequence>
+			<element name="CodigoOperacion" type="tns:CodigoType"/>
+			<element name="DescripcionOperacion" type="tns:DescripcionType"/>
+			<element name="IdentificadorOperacion" type="tns:IdOperacionType"/>
+			<element name="RangoFacturacion" type="tns:RangoFacturacion" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	
+	<complexType name="RangoFacturacion">
+		<annotation>
+			<documentation xml:lang="es">
+				Contiene la informacion relevante en la consulta del rango de facturacion perteneciente a la resolucion
+			</documentation>
+		</annotation>
+		<sequence>
+			<element name="NumeroResolucion" type="long"/>
+			<element name="FechaResolucion" type="date"/>
+			<element name="Prefijo" type="tns:PrefijoType"/>
+			<element name="RangoInicial" type="tns:RangoType"/>
+			<element name="RangoFinal" type="tns:RangoType"/>
+			<element name="FechaVigenciaDesde" type="date"/>
+			<element name="FechaVigenciaHasta" type="date"/>
+			<element name="ClaveTecnica" type="string"/>
+		</sequence>
+	</complexType>
+	
+
+	<simpleType name="NitType">
+        <annotation>
+        	<documentation>NIT</documentation>
+        </annotation>
+        <restriction base="string">
+			<minLength value="1"></minLength>
+			<maxLength value="35"></maxLength>
+		</restriction>
+	</simpleType>
+	
+	
+	
+	<simpleType name="CodigoType">
+		<annotation>
+			<documentation></documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value='OK'/>
+			<enumeration value='ND'/>
+			<enumeration value='EP'/>
+			<enumeration value='ES'/>
+			<enumeration value='EH'/>
+			<enumeration value='EA'/>
+			<enumeration value='ER'/>
+			<enumeration value='EF'/>
+			<enumeration value='EN'/>
+		</restriction>
+	</simpleType>
+	
+	<simpleType name="DescripcionType">
+		<annotation>
+			<documentation></documentation>
+		</annotation>
+		<restriction base="string">
+			<minLength value="1"></minLength>
+			<maxLength value="500"></maxLength>
+		</restriction>
+	</simpleType>
+	
+	<simpleType name="PrefijoType">
+		<annotation>
+			<documentation></documentation>
+		</annotation>
+		<restriction base="string">
+			<minLength value="1"></minLength>
+			<maxLength value="4"></maxLength>
+		</restriction>
+	</simpleType>
+	
+	<simpleType name="RangoType">
+		<restriction base="long">
+			<minExclusive value="0"/>
+			<maxInclusive value="9999999999999999"/>
+		</restriction>
+	</simpleType>
+	
+	<simpleType name="IdOperacionType">
+		<restriction base="decimal">
+			<minExclusive value="0"/>
+			<maxInclusive value="99999999999999999999"/>
+		</restriction>
+	</simpleType>
+</schema>

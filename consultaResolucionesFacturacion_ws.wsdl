@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="http://www.dian.gov.co/servicios/facturaelectronica/ConsultaResolucionFacturacion" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.dian.gov.co/servicios/facturaelectronica/ConsultaResolucionFacturacion" targetNamespace="http://www.dian.gov.co/servicios/facturaelectronica/ConsultaResolucionFacturacion">
+  <wsdl:types xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" elementFormDefault="qualified" targetNamespace="http://www.dian.gov.co/servicios/facturaelectronica/ConsultaResolucionFacturacion" xmlns:tns="http://www.dian.gov.co/servicios/facturaelectronica/ConsultaResolucionFacturacion">
+	
+	<element name="ConsultaResolucionesFacturacionPeticion" type="tns:ConsultaResoluciones" xmlns="http://www.w3.org/2001/XMLSchema"/>
+	
+	<element name="ConsultaResolucionesFacturacionRespuesta" type="tns:ResolucionesFacturacion" xmlns="http://www.w3.org/2001/XMLSchema"/>
+	
+	
+	<!-- REQUEST -->
+	<complexType name="ConsultaResoluciones" xmlns="http://www.w3.org/2001/XMLSchema">
+		<annotation xmlns="http://www.w3.org/2001/XMLSchema">
+			<documentation xmlns="http://www.w3.org/2001/XMLSchema">Envoltorio para consultar resoluciones de facturacion por medio de web service</documentation>
+		</annotation>
+		<sequence xmlns="http://www.w3.org/2001/XMLSchema">
+			<element name="NITObligadoFacturarElectronicamente" type="tns:NitType" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<element name="NITProveedorTecnologico" type="tns:NitType" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<element maxOccurs="1" minOccurs="1" name="IdentificadorSoftware" type="string" xmlns="http://www.w3.org/2001/XMLSchema"/>
+		</sequence>
+	</complexType>
+	
+	
+	<!-- RESPONSE -->
+	<complexType name="ResolucionesFacturacion" xmlns="http://www.w3.org/2001/XMLSchema">
+		<sequence xmlns="http://www.w3.org/2001/XMLSchema">
+			<element name="CodigoOperacion" type="tns:CodigoType" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<element name="DescripcionOperacion" type="tns:DescripcionType" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<element name="IdentificadorOperacion" type="tns:IdOperacionType" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<element maxOccurs="unbounded" minOccurs="0" name="RangoFacturacion" type="tns:RangoFacturacion" xmlns="http://www.w3.org/2001/XMLSchema"/>
+		</sequence>
+	</complexType>
+	
+	<complexType name="RangoFacturacion" xmlns="http://www.w3.org/2001/XMLSchema">
+		<annotation xmlns="http://www.w3.org/2001/XMLSchema">
+			<documentation xml:lang="es" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+				Contiene la informacion relevante en la consulta del rango de facturacion perteneciente a la resolucion
+			</documentation>
+		</annotation>
+		<sequence xmlns="http://www.w3.org/2001/XMLSchema">
+			<element name="NumeroResolucion" type="long" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<element name="FechaResolucion" type="date" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<element name="Prefijo" type="tns:PrefijoType" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<element name="RangoInicial" type="tns:RangoType" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<element name="RangoFinal" type="tns:RangoType" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<element name="FechaVigenciaDesde" type="date" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<element name="FechaVigenciaHasta" type="date" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<element name="ClaveTecnica" type="string" xmlns="http://www.w3.org/2001/XMLSchema"/>
+		</sequence>
+	</complexType>
+	
+
+	<simpleType name="NitType" xmlns="http://www.w3.org/2001/XMLSchema">
+        <annotation xmlns="http://www.w3.org/2001/XMLSchema">
+        	<documentation xmlns="http://www.w3.org/2001/XMLSchema">NIT</documentation>
+        </annotation>
+        <restriction base="string" xmlns="http://www.w3.org/2001/XMLSchema">
+			<minLength value="1" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<maxLength value="35" xmlns="http://www.w3.org/2001/XMLSchema"/>
+		</restriction>
+	</simpleType>
+	
+	
+	
+	<simpleType name="CodigoType" xmlns="http://www.w3.org/2001/XMLSchema">
+		<annotation xmlns="http://www.w3.org/2001/XMLSchema">
+			<documentation xmlns="http://www.w3.org/2001/XMLSchema"/>
+		</annotation>
+		<restriction base="string" xmlns="http://www.w3.org/2001/XMLSchema">
+			<enumeration value="OK" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<enumeration value="ND" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<enumeration value="EP" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<enumeration value="ES" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<enumeration value="EH" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<enumeration value="EA" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<enumeration value="ER" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<enumeration value="EF" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<enumeration value="EN" xmlns="http://www.w3.org/2001/XMLSchema"/>
+		</restriction>
+	</simpleType>
+	
+	<simpleType name="DescripcionType" xmlns="http://www.w3.org/2001/XMLSchema">
+		<annotation xmlns="http://www.w3.org/2001/XMLSchema">
+			<documentation xmlns="http://www.w3.org/2001/XMLSchema"/>
+		</annotation>
+		<restriction base="string" xmlns="http://www.w3.org/2001/XMLSchema">
+			<minLength value="1" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<maxLength value="500" xmlns="http://www.w3.org/2001/XMLSchema"/>
+		</restriction>
+	</simpleType>
+	
+	<simpleType name="PrefijoType" xmlns="http://www.w3.org/2001/XMLSchema">
+		<annotation xmlns="http://www.w3.org/2001/XMLSchema">
+			<documentation xmlns="http://www.w3.org/2001/XMLSchema"/>
+		</annotation>
+		<restriction base="string" xmlns="http://www.w3.org/2001/XMLSchema">
+			<minLength value="1" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<maxLength value="4" xmlns="http://www.w3.org/2001/XMLSchema"/>
+		</restriction>
+	</simpleType>
+	
+	<simpleType name="RangoType" xmlns="http://www.w3.org/2001/XMLSchema">
+		<restriction base="long" xmlns="http://www.w3.org/2001/XMLSchema">
+			<minExclusive value="0" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<maxInclusive value="9999999999999999" xmlns="http://www.w3.org/2001/XMLSchema"/>
+		</restriction>
+	</simpleType>
+	
+	<simpleType name="IdOperacionType" xmlns="http://www.w3.org/2001/XMLSchema">
+		<restriction base="decimal" xmlns="http://www.w3.org/2001/XMLSchema">
+			<minExclusive value="0" xmlns="http://www.w3.org/2001/XMLSchema"/>
+			<maxInclusive value="99999999999999999999" xmlns="http://www.w3.org/2001/XMLSchema"/>
+		</restriction>
+	</simpleType>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="ConsultaResolucionesFacturacionRespuesta" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:part element="tns:ConsultaResolucionesFacturacionRespuesta" name="ConsultaResolucionesFacturacionRespuesta" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ConsultaResolucionesFacturacionPeticion" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:part element="tns:ConsultaResolucionesFacturacionPeticion" name="ConsultaResolucionesFacturacionPeticion" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="resolucionFacturacionPortName" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:operation name="ConsultaResolucionesFacturacion" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+      <wsdl:input message="tns:ConsultaResolucionesFacturacionPeticion" name="ConsultaResolucionesFacturacionPeticion" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    </wsdl:input>
+      <wsdl:output message="tns:ConsultaResolucionesFacturacionRespuesta" name="ConsultaResolucionesFacturacionRespuesta" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="resolucionFacturacionPortNameSoap11" type="tns:resolucionFacturacionPortName" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+    <wsdl:operation name="ConsultaResolucionesFacturacion" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+      <soap:operation soapAction="" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+      <wsdl:input name="ConsultaResolucionesFacturacionPeticion" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+        <soap:body use="literal" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+      </wsdl:input>
+      <wsdl:output name="ConsultaResolucionesFacturacionRespuesta" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+        <soap:body use="literal" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="resolucionFacturacionPortNameService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:port binding="tns:resolucionFacturacionPortNameSoap11" name="resolucionFacturacionPortNameSoap11" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+      <soap:address location="http://facturaelectronica.dian.gov.co:80/servicios/B2BIntegrationEngine-servicios/FacturaElectronica" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
