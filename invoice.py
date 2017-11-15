@@ -55,6 +55,9 @@ def invoice_to_xml(UBLExtensions_0,UBLExtensions_1,UBLVersionID,CustomizationID,
         , "qdt": "urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2"
         , "sts": "http://www.dian.gov.co/contratos/facturaelectronica/v1/Structures"
         , "udt": "urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"
+ #dummy sts,ds
+        , "sts": "urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"
+        , "ds": "urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"
         , "xsi": "http://www.w3.org/2001/XMLSchema-instance"}
 
     fe_e = ElementMaker(
@@ -74,25 +77,73 @@ def invoice_to_xml(UBLExtensions_0,UBLExtensions_1,UBLVersionID,CustomizationID,
         namespace=NSMAP['cbc'],
         nsmap=NSMAP
     )
+    sts_e = ElementMaker(
+        namespace=NSMAP['sts'],
+        nsmap=NSMAP
+    )
+    ds_e = ElementMaker(
+        namespace=NSMAP['ds'],
+        nsmap=NSMAP
+    )
     root = fe_e.Invoice(
-    ext_e.UBLExtensions(UBLExtensions_0)
-    ,ext_e.UBLExtensions(UBLExtensions_1)
+    ext_e.UBLExtensions(ext_e.UBLExtensions(ext_e.ExtensionContent(sts_e.DianExtensions)))
+    ,ext_e.UBLExtensions(ext_e.UBLExtensions(ext_e.ExtensionContent(ds_e.Signature(ds_e.KeyInfo))))
     ,cbc_e.UBLVersionID(UBLVersionID)
     ,cbc_e.CustomizationID(CustomizationID)
     ,cbc_e.ProfileID(ProfileID)
     ,cbc_e.ID(ID)
-    ,cbc_e.UUID(UBLVersionID)
+    ,cbc_e.UUID(UUID)
     ,cbc_e.IssueDate(IssueDate)
     ,cbc_e.IssueTime(IssueTime)
     ,cbc_e.InvoiceTypeCode(InvoiceTypeCode)
     ,cbc_e.Note(Note)
     ,cbc_e.DocumentCurrencyCode(DocumentCurrencyCode)
-    ,fe_e.AccountingSupplierParty(AccountingSupplierParty)
+
+    ,fe_e.AccountingSupplierParty(cbc_e.AdditionalAccountID)
+    ,fe_e.AccountingSupplierParty(fe_e.Party(cac_e.PartyIdentification))
+    ,fe_e.AccountingSupplierParty(fe_e.Party(cac_e.PartyName))
+    ,fe_e.AccountingSupplierParty(fe_e.Party(fe_e.PhysicalLocation))
+    ,fe_e.AccountingSupplierParty(fe_e.Party(fe_e.PartyTaxScheme))
+    ,fe_e.AccountingSupplierParty(fe_e.Party(fe_e.PartyLegalEntity))
+    ,fe_e.AccountingSupplierParty(fe_e.Party(cac_e.PartyIdentification))
+    ,fe_e.AccountingSupplierParty(fe_e.Party(fe_e.PartyTaxScheme(cbc_e.TaxLevelCode)))
+    ,fe_e.AccountingSupplierParty(fe_e.Party(cac_e.PartyIdentification))
+
+    ,fe_e.AccountingCustomerParty(cbc_e.AdditionalAccountID)
+    ,fe_e.AccountingCustomerParty(fe_e.Party(cac_e.PartyIdentification))
+    ,fe_e.AccountingCustomerParty(fe_e.Party(cac_e.PartyIdentification(cbc_e.ID)))
+    ,fe_e.AccountingCustomerParty(fe_e.Party(cac_e.PartyName))
+    ,fe_e.AccountingCustomerParty(fe_e.Party(cac_e.PartyName(cbc_e.Name)))
+    ,fe_e.AccountingCustomerParty(fe_e.Party(fe_e.PhysicalLocation))
+    ,fe_e.AccountingCustomerParty(fe_e.Party(fe_e.PartyTaxScheme))
+    ,fe_e.AccountingCustomerParty(fe_e.Party(fe_e.PartyLegalEntity))
+    ,fe_e.AccountingCustomerParty(fe_e.Party(cac_e.PartyIdentification))
+    ,fe_e.AccountingCustomerParty(fe_e.Party(fe_e.PartyTaxScheme(cbc_e.TaxLevelCode)))
     ,fe_e.AccountingCustomerParty(AccountingCustomerParty)
-    ,fe_e.TaxTotal(TaxTotal)
-    ,fe_e.LegalMonetaryTotal(LegalMonetaryTotal)
-    ,fe_e.InvoiceLine(InvoiceLine)
-    )
+
+    ,fe_e.TaxTotal(cbc_e.TaxAmount)
+    ,fe_e.TaxTotal(cbc_e.TaxEvidenceIndicator)
+    ,fe_e.TaxTotal(fe_e.TaxSubtotal)
+    ,fe_e.TaxTotal(fe_e.TaxSubtotal(cbc_e.TaxableAmount))
+    ,fe_e.TaxTotal(fe_e.TaxSubtotal(cbc_e.TaxAmount))
+    ,fe_e.TaxTotal(fe_e.TaxSubtotal(cbc_e.Percent))
+    ,fe_e.TaxTotal(fe_e.TaxSubtotal(cac_e.TaxCategory))
+    ,fe_e.TaxTotal(fe_e.TaxSubtotal(cac_e.TaxCategory(cac_e.TaxScheme)))
+    ,fe_e.TaxTotal(fe_e.TaxSubtotal(cac_e.TaxCategory(cac_e.TaxScheme(cbc_e.ID))))
+
+    ,fe_e.LegalMonetaryTotal(cbc_e.LineExtensionAmount)
+    ,fe_e.LegalMonetaryTotal(cbc_e.TaxExclusiveAmount)
+    ,fe_e.LegalMonetaryTotal(cbc_e.LineExtensionAmount)
+
+    ,fe_e.InvoiceLine(cbc_e.ID)
+    ,fe_e.InvoiceLine(cbc_e.InvoicedQuantity)
+    ,fe_e.InvoiceLine(cbc_e.LineExtensionAmount)
+    ,fe_e.InvoiceLine(fe_e.Item)
+    ,fe_e.InvoiceLine(fe_e.Price)
+    ,fe_e.InvoiceLine(fe_e.Item(cbc_e.Description))
+    ,fe_e.InvoiceLine(fe_e.Price(cbc_e.PriceAmount))
+
+                                )
 
     #print(etree.tostring(root,xml_declaration=True,encoding='UTF-8',pretty_print=True))
     etree.ElementTree(root).write("inv.xml", xml_declaration=True,encoding='UTF-8',standalone=False,pretty_print=True)
