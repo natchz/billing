@@ -2,16 +2,13 @@
 __author__ = gdalvarezr
 __license__ = MIT
 """
-from lxml import builder
-from zeep import Client,wsdl,xsd
-from zeep.plugins import HistoryPlugin
-from csv import reader
-import smtplib
-from datetime import datetime
-#from model import *
-#from mail_template import send_mail
-from mail_success import send_mail
 import base64
+from datetime import datetime
+
+from zeep import Client
+from zeep.plugins import HistoryPlugin
+
+
 #customer nit, username, token,
 
 
@@ -148,23 +145,7 @@ def invoice_to_xml(UBLExtensions_0,UBLExtensions_1,UBLVersionID,CustomizationID,
     #print(etree.tostring(root,xml_declaration=True,encoding='UTF-8',pretty_print=True))
     etree.ElementTree(root).write("inv.xml", xml_declaration=True,encoding='UTF-8',standalone=False,pretty_print=True)
 
-
-"""
-
-    E = ElementMaker(namespace="XSD_Dian_UBL/DIAN_UBL.xsd",
-                     nsmap={'p': "http://my.de/fault/namespace"
-                            ,'x':"anoter.x.space"})
-    data="data"
-    data2= "123"
-    my_doc = E.one(E.a(data),E.three(data2))
-    print(etree.tostring(my_doc,xml_declaration=True,encoding='UTF-8',pretty_print=True))
-    etree.ElementTree(my_doc).write("inv.xml", pretty_print=True)
-    """
-
 if __name__ == "__main__":
     invoice_to_xml("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17")
-    #send_invoice()
-    #flow:
-    #read_file > to_xml > to_ws > get_resp > send_html mail
 
 
