@@ -8,36 +8,32 @@ from datetime import datetime
 from zeep import Client
 from zeep.plugins import HistoryPlugin
 
-
-#customer nit, username, token,
-
+# customer nit, username, token,
 
 def send_invoice():
-
     history = HistoryPlugin()
     wsdl = 'http://localhost/facturaElectronica.wsdl'
     client = Client(wsdl=wsdl, plugins=[history])
     encoded = base64.b64encode(b'data to be encoded')
-    #print(client.service.EnvioFacturaElectronica("1015420690", "001", datetime.today(), encoded))
-    #print(history.last_sent)
+    # print(client.service.EnvioFacturaElectronica("1015420690", "001", datetime.today(), encoded))
+    # print(history.last_sent)
     from lxml import etree as ET
     #
     # <your setup code for zeep here>
     #
-    node = client.create_message(client.service, 'EnvioFacturaElectronica', "1015420690", "001", datetime.today(), encoded)
+    node = client.create_message(client.service, 'EnvioFacturaElectronica', "1015420690", "001", datetime.today(),
+                                 encoded)
     tree = ET.ElementTree(node)
     tree.write('test.xml', pretty_print=True)
 
+
 def save_ack(ws_resp):
-    #write the ack from the sending fucntion
+    # write the ack from the sending fucntion
     pass
 
-def invoice_to_xml(UBLExtensions_0,UBLExtensions_1,UBLVersionID,CustomizationID,
-                   ProfileID,ID,UUID,IssueDate,IssueTime,InvoiceTypeCode,Note,
-                   DocumentCurrencyCode,AccountingSupplierParty ,
-                   AccountingCustomerParty ,TaxTotal,LegalMonetaryTotal,
-                   InvoiceLine):
-    #http://forums.whirlpool.net.au/archive/1975786
+def invoice_to_xml(invoice_id, client, items):
+
+    # http://forums.whirlpool.net.au/archive/1975786
     from lxml import etree
     from lxml.builder import ElementMaker
 
@@ -52,16 +48,15 @@ def invoice_to_xml(UBLExtensions_0,UBLExtensions_1,UBLVersionID,CustomizationID,
         , "qdt": "urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2"
         , "sts": "http://www.dian.gov.co/contratos/facturaelectronica/v1/Structures"
         , "udt": "urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"
- #dummy sts,ds
-        , "sts": "urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"
+        # dummy ,ds,xades
         , "ds": "urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"
+        , "xades": "urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"
         , "xsi": "http://www.w3.org/2001/XMLSchema-instance"}
 
     fe_e = ElementMaker(
         namespace=NSMAP['fe'],
         nsmap=NSMAP
     )
-
     ext_e = ElementMaker(
         namespace=NSMAP['ext'],
         nsmap=NSMAP)
@@ -82,70 +77,109 @@ def invoice_to_xml(UBLExtensions_0,UBLExtensions_1,UBLVersionID,CustomizationID,
         namespace=NSMAP['ds'],
         nsmap=NSMAP
     )
+    xades_e = ElementMaker(
+        namespace=NSMAP['xades'],
+        nsmap=NSMAP
+    )
     root = fe_e.Invoice(
-    ext_e.UBLExtensions(ext_e.UBLExtensions(ext_e.ExtensionContent(sts_e.DianExtensions)))
-    ,ext_e.UBLExtensions(ext_e.UBLExtensions(ext_e.ExtensionContent(ds_e.Signature(ds_e.KeyInfo))))
-    ,cbc_e.UBLVersionID(UBLVersionID)
-    ,cbc_e.CustomizationID(CustomizationID)
-    ,cbc_e.ProfileID(ProfileID)
-    ,cbc_e.ID(ID)
-    ,cbc_e.UUID(UUID)
-    ,cbc_e.IssueDate(IssueDate)
-    ,cbc_e.IssueTime(IssueTime)
-    ,cbc_e.InvoiceTypeCode(InvoiceTypeCode)
-    ,cbc_e.Note(Note)
-    ,cbc_e.DocumentCurrencyCode(DocumentCurrencyCode)
+        ext_e.UBLExtensions(ext_e.UBLExtension(ext_e.ExtensionContent(sts_e.DianExtensions
+                                                                      (sts_e.InvoiceControl
+                                                                       , sts_e.InvoiceAuthorization
+                                                                       , sts_e.AuthorizationPeriod(
+                                                                          cbc_e.StartDate
+                                                                          , cbc_e.EndDate)
+                                                                       , sts_e.AuthorizedInvoices(
+                                                                          sts_e.Prefix
+                                                                          , sts_e.From
+                                                                          , sts_e.To)
 
-    ,fe_e.AccountingSupplierParty(cbc_e.AdditionalAccountID)
-    ,fe_e.AccountingSupplierParty(fe_e.Party(cac_e.PartyIdentification))
-    ,fe_e.AccountingSupplierParty(fe_e.Party(cac_e.PartyName))
-    ,fe_e.AccountingSupplierParty(fe_e.Party(fe_e.PhysicalLocation))
-    ,fe_e.AccountingSupplierParty(fe_e.Party(fe_e.PartyTaxScheme))
-    ,fe_e.AccountingSupplierParty(fe_e.Party(fe_e.PartyLegalEntity))
-    ,fe_e.AccountingSupplierParty(fe_e.Party(cac_e.PartyIdentification))
-    ,fe_e.AccountingSupplierParty(fe_e.Party(fe_e.PartyTaxScheme(cbc_e.TaxLevelCode)))
-    ,fe_e.AccountingSupplierParty(fe_e.Party(cac_e.PartyIdentification))
+    ),
+    sts_e.InvoiceSource(cbc_e.IdentificationCode)
+    ,sts_e.SoftwareProvider(
+    sts_e.ProviderID
+    ,sts_e.SoftwareID)
+    ,sts_e.SoftwareSecurityCode
+    )),
+        ext_e.UBLExtension(ext_e.ExtensionContent(ds_e.Signature(ds_e.SignedInfo),
+                                                  ds_e.Object(
+                                                      xades_e.QualifyingProperties(
+                                                          xades_e.SignedProperties
+                                                      )
+                                                  ))))
+        , cbc_e.UBLVersionID()
+        , cbc_e.CustomizationID()
+        , cbc_e.ProfileID()
+        , cbc_e.ID()
+        , cbc_e.UUID()
+        , cbc_e.IssueDate()
+        , cbc_e.IssueTime()
+        , cbc_e.InvoiceTypeCode()
+        , cbc_e.Note()
+        , cbc_e.DocumentCurrencyCode()
+        , fe_e.AccountingSupplierParty(cbc_e.AdditionalAccountID
+                                       , fe_e.Party(cac_e.PartyIdentification(cbc_e.ID)
+                                                    , cac_e.PartyName(cbc_e.Name)
+                                                    , fe_e.PhysicalLocation(fe_e.Address(
+                                                                             cbc_e.CitySubdivisionName
+                                                                            , cbc_e.CityName
+                                                                            , cbc_e.CountrySubentity
+                                                                            , cac_e.AddressLine(cbc_e.Line)
+                                                                            , cac_e.Country(cbc_e.IdentificationCode)
+                                                                            )), fe_e.PartyTaxScheme(
+                    cbc_e.TaxLevelCode,
+                    cac_e.TaxScheme
+                )
+                                                    , fe_e.PartyLegalEntity
+                                                    , cac_e.PartyIdentification))
+        , fe_e.AccountingCustomerParty(cbc_e.AdditionalAccountID
+                                       , fe_e.Party(cac_e.PartyIdentification(cbc_e.ID)
+                                                    , fe_e.PhysicalLocation(fe_e.Address(
+                                                                             cbc_e.CitySubdivisionName
+                                                                            , cbc_e.CityName(client["client_city"])
+                                                                            , cbc_e.CountrySubentity
+                                                                            , cac_e.AddressLine(cbc_e.Line(client["client_address_1"]))
+                                                                            , cac_e.Country(cbc_e.IdentificationCode)
+                                                                            )), fe_e.PartyTaxScheme(
+                    cbc_e.TaxLevelCode,
+                    cac_e.TaxScheme
+                )
+                                                    , fe_e.Person(
+                    cbc_e.FirstName(client["client_name"])
+    ,cbc_e.FamilyName(client["client_surname"])
+    ,cbc_e.MiddleName
+    )))
+    ,fe_e.TaxTotal(fe_e.TaxSubtotal(cbc_e.TaxableAmount
+, cbc_e.TaxAmount
+, cbc_e.Percent
+, cac_e.TaxCategory(
+cac_e.TaxScheme(
+ cbc_e.ID))))
+, fe_e.LegalMonetaryTotal(cbc_e.LineExtensionAmount)
+, fe_e.LegalMonetaryTotal(cbc_e.TaxExclusiveAmount)
+, fe_e.LegalMonetaryTotal(cbc_e.LineExtensionAmount)
+,*[fe_e.InvoiceLine(
+cbc_e.ID("{}".format(item["item_name"]))
+,cbc_e.InvoicedQuantity("{}".format(item["item_quantity"]))
+,cbc_e.LineExtensionAmount
+,fe_e.Item(cbc_e.Description("{}".format(item["item_description"])))
+,fe_e.Price(cbc_e.PriceAmount("{}".format(item["item_price"])))
+    )
+    for item in items
+   ]
+    )
+    etree.ElementTree(root).write("inv.xml",xml_declaration=True, encoding='UTF-8', standalone=False,
+pretty_print = True)
 
-    ,fe_e.AccountingCustomerParty(cbc_e.AdditionalAccountID)
-    ,fe_e.AccountingCustomerParty(fe_e.Party(cac_e.PartyIdentification))
-    ,fe_e.AccountingCustomerParty(fe_e.Party(cac_e.PartyIdentification(cbc_e.ID)))
-    ,fe_e.AccountingCustomerParty(fe_e.Party(cac_e.PartyName))
-    ,fe_e.AccountingCustomerParty(fe_e.Party(cac_e.PartyName(cbc_e.Name)))
-    ,fe_e.AccountingCustomerParty(fe_e.Party(fe_e.PhysicalLocation))
-    ,fe_e.AccountingCustomerParty(fe_e.Party(fe_e.PartyTaxScheme))
-    ,fe_e.AccountingCustomerParty(fe_e.Party(fe_e.PartyLegalEntity))
-    ,fe_e.AccountingCustomerParty(fe_e.Party(cac_e.PartyIdentification))
-    ,fe_e.AccountingCustomerParty(fe_e.Party(fe_e.PartyTaxScheme(cbc_e.TaxLevelCode)))
-    ,fe_e.AccountingCustomerParty(AccountingCustomerParty)
+def get_xpath():
 
-    ,fe_e.TaxTotal(cbc_e.TaxAmount)
-    ,fe_e.TaxTotal(cbc_e.TaxEvidenceIndicator)
-    ,fe_e.TaxTotal(fe_e.TaxSubtotal)
-    ,fe_e.TaxTotal(fe_e.TaxSubtotal(cbc_e.TaxableAmount))
-    ,fe_e.TaxTotal(fe_e.TaxSubtotal(cbc_e.TaxAmount))
-    ,fe_e.TaxTotal(fe_e.TaxSubtotal(cbc_e.Percent))
-    ,fe_e.TaxTotal(fe_e.TaxSubtotal(cac_e.TaxCategory))
-    ,fe_e.TaxTotal(fe_e.TaxSubtotal(cac_e.TaxCategory(cac_e.TaxScheme)))
-    ,fe_e.TaxTotal(fe_e.TaxSubtotal(cac_e.TaxCategory(cac_e.TaxScheme(cbc_e.ID))))
-
-    ,fe_e.LegalMonetaryTotal(cbc_e.LineExtensionAmount)
-    ,fe_e.LegalMonetaryTotal(cbc_e.TaxExclusiveAmount)
-    ,fe_e.LegalMonetaryTotal(cbc_e.LineExtensionAmount)
-
-    ,fe_e.InvoiceLine(cbc_e.ID)
-    ,fe_e.InvoiceLine(cbc_e.InvoicedQuantity)
-    ,fe_e.InvoiceLine(cbc_e.LineExtensionAmount)
-    ,fe_e.InvoiceLine(fe_e.Item)
-    ,fe_e.InvoiceLine(fe_e.Price)
-    ,fe_e.InvoiceLine(fe_e.Item(cbc_e.Description))
-    ,fe_e.InvoiceLine(fe_e.Price(cbc_e.PriceAmount))
-
-                                )
-
-    #print(etree.tostring(root,xml_declaration=True,encoding='UTF-8',pretty_print=True))
-    etree.ElementTree(root).write("inv.xml", xml_declaration=True,encoding='UTF-8',standalone=False,pretty_print=True)
+    from lxml import etree
+    with open("inv_ex.xml", "rb") as f:
+        data = f.read()
+    root = etree.fromstring(data)
+    tree = etree.ElementTree(root)
+    for e in root.iter():
+        print(tree.getpath(e))
 
 if __name__ == "__main__":
-    invoice_to_xml("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17")
-
-
+    pass
+    #get_xpath()
