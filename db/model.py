@@ -553,3 +553,23 @@ class IpVersions(BaseModel):
     class Meta:
         db_table = 'ip_versions'
 
+
+class IssuerData(BaseModel):
+    nit = PrimaryKeyField(db_column='nit')
+    key = CharField()
+    contract_number = CharField()
+    payment = IntegerField()
+
+    class Meta:
+        db_table = 'IssuerData'
+
+class Audit(BaseModel):
+    uploaded_date = CharField(index=True)
+    invoice_count = CharField()
+    last_invoice_sequence = PrimaryKeyField(db_column='last_invoice_sequence')
+    file_name = CharField()
+    file_record = CharField()
+    error_in_file = CharField()
+
+    class Meta:
+        db_table = 'Audit'

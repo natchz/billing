@@ -4,11 +4,17 @@ __license__ = MIT
 """
 import base64
 from datetime import datetime
-
+from lxml import etree
+from lxml.builder import ElementMaker
 from zeep import Client
 from zeep.plugins import HistoryPlugin
-
+from filenames import ws_zip_file, file_name
+import pathlib
 # customer nit, username, token,
+
+TODAY = datetime.today().date()
+pathlib.Path('invoices/{}'.format(TODAY)).mkdir(parents=True, exist_ok=True)
+
 
 def send_invoice():
     history = HistoryPlugin()
@@ -26,17 +32,13 @@ def send_invoice():
     tree = ET.ElementTree(node)
     tree.write('test.xml', pretty_print=True)
 
-
 def save_ack(ws_resp):
     # write the ack from the sending fucntion
     pass
 
-def invoice_to_xml(invoice_id, client, items):
+def invoice_to_xml(invoice_id, client, items, customer_nit):
 
     # http://forums.whirlpool.net.au/archive/1975786
-    from lxml import etree
-    from lxml.builder import ElementMaker
-
     NSMAP = {
         "fe": "http://www.dian.gov.co/contratos/facturaelectronica/v1"
         , "cac": "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
@@ -167,8 +169,9 @@ cbc_e.ID("{}".format(item["item_name"]))
     for item in items
    ]
     )
-    etree.ElementTree(root).write("inv.xml",xml_declaration=True, encoding='UTF-8', standalone=False,
+    etree.ElementTree(root).write("invoices/{}/{}".format(TODAY,file_name(customer_nit)),xml_declaration=True, encoding='UTF-8', standalone=False,
 pretty_print = True)
+    ws_zip_file("invoices/{}/".format(TODAY),file_name(customer_nit))
 
 def get_xpath():
 

@@ -1,5 +1,6 @@
 from db.model import *
 from datetime import datetime
+from invoice import invoice_to_xml
 
 TODAY = datetime.today().date()
 
@@ -13,11 +14,10 @@ def get_items(inv_id):
                           ).where(IpInvoiceItems.invoice == inv_id).dicts()
     return items
 
-
-from invoice import invoice_to_xml
-
 def get_invoices():
     invoices = IpInvoices.select().where(IpInvoices.invoice_date_created == TODAY)
+    customer = IssuerData.select().dicts()
+    customer_nit = customer[0]["nit"]
     for invoice in invoices:
         print(invoice.invoice)
         client = get_customer(invoice.client)
@@ -25,7 +25,7 @@ def get_invoices():
         items = get_items(invoice.invoice)
         for item in items:
             print(item)
-        invoice_to_xml(invoice.invoice, client, items)
+        invoice_to_xml(invoice.invoice, client, items,customer_nit)
 
 get_invoices()
 
