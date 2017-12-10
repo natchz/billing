@@ -4,12 +4,12 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-def send_mail(sender="john@doe.com",recipients="jane@doe.com",subject="default"
+def send_mail(filepath,sender="john@doe.com",recipients="german@omnipayments.com",subject="default"
                                                                       "subject"):
 
     sender = sender
-    #recipients = ['ana.forero@carvajal.com']
     recipients = recipients
+    me = "german@omnipayments.com"
     # Create message container - the correct MIME type is multipart/alternative.
     msg = MIMEMultipart('alternative')
     msg['Subject'] = subject
@@ -63,13 +63,12 @@ def send_mail(sender="john@doe.com",recipients="jane@doe.com",subject="default"
 
     # Record the MIME types of both parts - text/plain and text/html.
     part1 = MIMEText(html, 'html')
-    part2 = MIMEText(html, 'html')
 
     # Attach parts into message container.
     # According to RFC 2046, the last part of a multipart message, in this case
     # the HTML message, is best and preferred.
     msg.attach(part1)
-    msg.attach(part2)
+    msg.attach(MIMEText(file(filepath).read()))
 
     # Send the message via local SMTP server.
     s = smtplib.SMTP('localhost')
@@ -77,3 +76,4 @@ def send_mail(sender="john@doe.com",recipients="jane@doe.com",subject="default"
     # and message to send - here it is sent as one string.
     s.sendmail(me, recipients, msg.as_string())
     s.quit()
+

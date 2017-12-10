@@ -554,12 +554,12 @@ class IpVersions(BaseModel):
         db_table = 'ip_versions'
 
 
-class IssuerData(BaseModel):
+class Issuer(BaseModel):
     nit = PrimaryKeyField(db_column='nit')
     key = CharField()
     contract_number = CharField()
-    payment = IntegerField()
-
+    soft_id = CharField()
+    soft_security_code = CharField()
     class Meta:
         db_table = 'IssuerData'
 

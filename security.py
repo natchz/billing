@@ -1,14 +1,23 @@
 import hashlib
-from db.model import Audit,IpInvoices
+from db.model import IpInvoices
 from datetime import datetime
+from db.model import *
 
 TODAY = datetime.today().date()
+
+
+def invoice_datetime_java_format(invoice_id):
+    invoice = IpInvoices.get(IpInvoices.invoice == invoice_id)
+    inv_date = invoice.invoice_date_created
+    inv_time = invoice.invoice_time_created
+    inv_datetime = datetime.combine(inv_date,inv_time)
+    java_format = "%Y%m%d%H%M%S"
+    return datetime.strftime(inv_datetime,java_format)
+
 
 def invoice_seq():
     seq = Audit.get(Audit.last_invoice_sequence)
     total_invoices = IpInvoices.select().count()
-    Audit.create(Audit.uploaded_date=TODAY,Audit.invoice_count=total_invoices,
-                 Audit.last_invoice_sequence=(total_invoices-seq))
     return seq
 
 def hash(hash_type, input_text):
@@ -21,14 +30,52 @@ def hash(hash_type, input_text):
                   'SHA512' : hashlib.sha512}
     return hash_funcs[hash_type](input_text).hexdigest()
 
-def CUFE(NumFac ,FecFac ,ValFac ,CodImp1 ,ValImp1 ,CodImp2 ,ValImp2 ,
-         CodImp3 ,ValImp3 ,ValImp ,NitOFE ,TipAdq ,NumAdq ,ClTec):
-    cufe = hash('SHA1', "{}{}{}{}{}{}{}{}{}{}{}{}{}{}".format(NumFac ,FecFac,
-                                                                  ValFac ,CodImp1 ,ValImp1 ,
-                                                                  CodImp2 ,ValImp2 , CodImp3 ,
-                                                                  ValImp3 ,ValImp ,NitOFE ,
-                                                                  TipAdq ,NumAdq ,ClTec).encode('utf-8'))
+def total_taxes(invoice_id,tax_id):
+    cursor = database.execute_sql("""
+    SELECT SUM(im.item_tax_total) AS total
+FROM ip_invoice_items AS ii, ip_invoice_item_amounts AS im
+WHERE ii.invoice_id = {} AND ii.item_tax_rate_id = {} AND ii.item_id = im.item_id
+GROUP BY item_tax_rate_id
+    """.format(invoice_id, tax_id))
+    result = cursor.fetchone()
+    if not result:
+        result = 0
+        return result
+    return result[0]
 
-    return cufe
+def CUFE(invoice_id):
+    print(invoice_id)
+    cursor = database.execute_sql("""
+SELECT i.invoice_number,ia.invoice_item_subtotal,id.nit,
+case when cc.client_custom_fieldid = 3 and cc.client_custom_fieldvalue = ''
+then "01"
+when cc.client_custom_fieldid = 3 and cc.client_custom_fieldvalue = 5
+then "01"
+when cc.client_custom_fieldid = 3 and cc.client_custom_fieldvalue = 6
+then "02"
+end,cl.client_vat_id, "tec_key"
+FROM ip_invoices AS i, ip_clients AS cl, ip_invoice_amounts AS ia, ip_invoice_tax_rates it, issuerdata AS id,
+ip_client_custom AS cc
+WHERE i.invoice_id = {} AND i.client_id = cl.client_id AND ia.invoice_id = i.invoice_id AND cc.client_id = cl.client_id
+LIMIT 1
+""".format(invoice_id))
 
-print(CUFE(1,2,3,4,5,6,7,8,9,0,3,3,2,2))
+    data = cursor.fetchone()
+    print(data)
+    tax_1 = total_taxes(invoice_id,1)
+    tax_2 = total_taxes(invoice_id,2)
+    tax_3 = total_taxes(invoice_id,3)
+
+    cufe = hash('SHA1', "{}{}{}{}{}{}{}{}{}{}{}{}{}".format(data[0],
+                                                            invoice_datetime_java_format(invoice_id),
+                                                            data[1],
+                                                            "01",tax_1,
+                                                            "02" ,tax_2,
+                                                            "03",tax_3,
+                                                            tax_1,
+                                                            data[2],
+                                                            data[3],
+                                                            data[4],
+                                                            data[5]).encode('utf-8'))
+
+    return data,cufe,tax_1,(tax_2+tax_3),(tax_1+tax_2+tax_3)

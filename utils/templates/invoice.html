@@ -1,0 +1,243 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Invoice</title>
+    <link rel="license" href="http://www.opensource.org/licenses/mit-license/">
+    <style type="text/css">
+      /* reset */
+
+      *{
+        border: 0;
+        box-sizing: content-box;
+        color: inherit;
+        font-family: inherit;
+        font-size: inherit;
+        font-style: inherit;
+        font-weight: inherit;
+        line-height: inherit;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        text-decoration: none;
+        vertical-align: top;
+      }
+
+      /* content editable */
+
+      *[] { border-radius: 0.25em; min-width: 1em; outline: 0;  c                                                                                        ursor: pointer; display: inline-block;}
+
+      *[]:hover, *[]:focus, td:hover *[contentedit                                                                                        able], td:focus *[], img.hover { background: #DEF; box-shadow: 0                                                                                         0 1em 0.5em #DEF; }
+
+      /*span[] { display: inline-block; }*/
+
+      /* heading */
+
+      h1 { font: bold 100% Ubuntu, Arial, sans-serif; text-align: center; text-t                                                                                        ransform: uppercase; }
+
+      /* table */
+
+      table { font-size: 75%; table-layout: fixed; width: 100%; }
+      table { border-collapse: separate; border-spacing: 2px; }
+      th, td { border-width: 1px; padding: 0.5em; position: relative; text-align                                                                                        : left; }
+      th, td { border-radius: 0.25em; border-style: solid; }
+      th { background: #EEE; border-color: #BBB; }
+      td { border-color: #DDD; }
+
+      /* page */
+
+      html { font: 16px/1 'Open Sans', sans-serif; overflow: auto; }
+      html { background: #fff; cursor: default; }
+
+      body { box-sizing: border-box; margin:0;}
+      #wrapper{height: 29.7cm; margin: 0 auto; width: 21cm; }
+      body { background: #FFF;}
+
+      /* header */
+
+      header { margin: 0 0 3em; }
+      header:after { clear: both; content: ""; display: table; }
+
+      header h1 { background: #000; border-radius: 0.25em; color: #FFF; margin:                                                                                         0 0 1em; padding: 0.5em 0; }
+      header address { float: left; font-size: 75%; font-style: normal; line-hei                                                                                        ght: 1.25; margin: 0 1em 1em 0; }
+      header address p { margin: 0 0 0.25em; }
+      header span, header img { display: block; float: right; }
+      header span { margin: 0 0 1em 1em; max-height: 25%; max-width: 60%; positi                                                                                        on: relative; }
+      header img { max-height: 100%; max-width: 50%; }
+      header input { cursor: pointer; -ms-filter:"progid:DXImageTransform.Micros                                                                                        oft.Alpha(Opacity=0)"; height: 100%; left: 0; opacity: 0; position: absolute; to                                                                                        p: 0; width: 100%; }
+
+      /* article */
+
+      article, article address, table.meta, table.inventory { margin: 0 0 3em; }
+      article:after { clear: both; content: ""; display: table; }
+      article h1 { clip: rect(0 0 0 0); position: absolute; }
+
+      article address { float: left; font-size: 125%; font-weight: bold; }
+
+      /* table meta & balance */
+
+      table.meta, table.balance { float: right; width: 36%; }
+      table.meta:after, table.balance:after { clear: both; content: ""; display:                                                                                         table; }
+
+      /* table meta */
+
+      table.meta th { width: 40%; }
+      table.meta td { width: 60%; }
+
+      /* table items */
+
+      table.inventory { clear: both; width: 100%; }
+      table.inventory th { font-weight: bold; text-align: center; }
+
+      table.inventory td:nth-child(1) { width: 26%; }
+      table.inventory td:nth-child(2) { width: 38%; }
+      table.inventory td:nth-child(3) { text-align: right; width: 12%; }
+      table.inventory td:nth-child(4) { text-align: right; width: 12%; }
+      table.inventory td:nth-child(5) { text-align: right; width: 12%; }
+
+      /* table balance */
+
+      table.balance th, table.balance td { width: 50%; }
+      table.balance td { text-align: right; }
+
+      /* aside */
+
+      aside h1 { border: none; border-width: 0 0 1px; margin: 0 0 1em; }
+      aside h1 { border-color: #999; border-bottom-style: solid; }
+
+      .cutw{position:relative;}
+      /* javascript */
+
+      .add, .cut
+      {
+        border-width: 1px;
+        display: block;
+        font-size: .8em;
+        padding: 0.25em;
+        float: left;
+        text-align: center;
+        width:0.8em;
+      }
+      .cut{font-size:1em;}
+
+      .add, .cut
+      {
+        background: #9AF;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        background-image: -moz-linear-gradient(#00ADEE 5%, #0078A5 100%);
+        background-image: -webkit-linear-gradient(#00ADEE 5%, #0078A5 100%);
+        border-radius: 0.5em;
+        border-color: #0076A3;
+        color: #FFF;
+        cursor: pointer;
+        font-weight: bold;
+        text-shadow: 0 -1px 2px rgba(0,0,0,0.333);
+      }
+
+      .add { margin: -2.5em 0 0; }
+
+      .add:hover { background: #00ADEE; }
+
+      .cut { opacity: 0; position: absolute; top: 0; left: -1.5em; }
+
+      tr:hover .cut { opacity: 1; }
+
+      @media print {
+        * { -webkit-print-color-adjust: exact; }
+        html { background: none; padding: 0; }
+        body { box-shadow: none; margin: 0; }
+        span:empty { display: none; }
+        .add, .cut { display: none; }
+      }
+
+      @page { margin: 0; }
+    </style>
+    <script>
+      function generateTableRow(){var a=document.createElement("tr");return a.in                                                                                        nerHTML='<td><div class="cutw"><a class="cut">-</a></div><span ><                                                                                        /span></td><td><span ></span></td><td><span data-prefix>$</span><                                                                                        span >0.00</span></td><td><span >0</span></td><td>                                                                                        <span data-prefix>$</span><span>0.00</span></td>',a}function parseFloatHTML(a){r                                                                                        eturn parseFloat(a.innerHTML.replace(/[^\d\.\-]+/g,""))||0}function parsePrice(a                                                                                        ){return a.toFixed(2).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g,"$1,")}function upda                                                                                        teNumber(a){var b=document.activeElement,c=parseFloat(b.innerHTML),d=b.innerHTML                                                                                        ==parsePrice(parseFloatHTML(b));isNaN(c)||38!=a.keyCode&&40!=a.keyCode&&!a.wheel                                                                                        DeltaY||(a.preventDefault(),c+=38==a.keyCode?1:40==a.keyCode?-1:Math.round(.025*                                                                                        a.wheelDelta),c=Math.max(c,0),b.innerHTML=d?parsePrice(c):c),updateInvoice()}fun                                                                                        ction updateInvoice(){for(var b,c,a,d,e,a=0,d=document.querySelectorAll("table.i                                                                                        nventory tbody tr"),e=0;d[e];++e)b=d[e].querySelectorAll("span:last-child"),c=pa                                                                                        rseFloatHTML(b[2])*parseFloatHTML(b[3]),a+=c,b[4].innerHTML=c;b=document.querySe                                                                                        lectorAll("table.balance td:last-child span:last-child"),b[0].innerHTML=a,b[2].i                                                                                        nnerHTML=document.querySelector("table.meta tr:last-child td:last-child span:las                                                                                        t-child").innerHTML=parsePrice(a-parseFloatHTML(b[1]));var f=document.querySelec                                                                                        tor("#prefix").innerHTML;for(d=document.querySelectorAll("[data-prefix]"),e=0;d[                                                                                        e];++e)d[e].innerHTML=f;for(d=document.querySelectorAll("span[data-prefix] + spa                                                                                        n"),e=0;d[e];++e)document.activeElement!=d[e]&&(d[e].innerHTML=parsePrice(parseF                                                                                        loatHTML(d[e])))}function onContentLoad(){function c(a){var c,b=a.target.querySe                                                                                        lector("[]");b&&a.target!=document.documentElement&&a.target!=doc                                                                                        ument.body&&b.focus(),a.target.matchesSelector(".add")?document.querySelector("t                                                                                        able.inventory tbody").appendChild(generateTableRow()):"cut"==a.target.className                                                                                        &&(c=a.target.ancestorQuerySelector("tr"),c.parentNode.removeChild(c)),updateInv                                                                                        oice()}function d(a){a.preventDefault(),b.classList.add("hover")}function e(a){a                                                                                        .preventDefault(),b.classList.remove("hover")}function f(a){b.classList.remove("                                                                                        hover");var c=new FileReader,d=a.dataTransfer?a.dataTransfer.files:a.target.file                                                                                        s,e=0;for(c.onload=g;d[e];)c.readAsDataURL(d[e++])}function g(a){var c=a.target.                                                                                        result;b.src=c}updateInvoice();var a=document.querySelector("input"),b=document.                                                                                        querySelector("img");window.addEventListener&&(document.addEventListener("click"                                                                                        ,c),document.addEventListener("mousewheel",updateNumber),document.addEventListen                                                                                        er("keydown",updateNumber),document.addEventListener("keydown",updateInvoice),do                                                                                        cument.addEventListener("keyup",updateInvoice),a.addEventListener("focus",d),a.a                                                                                        ddEventListener("mouseover",d),a.addEventListener("dragover",d),a.addEventListen                                                                                        er("dragenter",d),a.addEventListener("blur",e),a.addEventListener("dragleave",e)                                                                                        ,a.addEventListener("mouseout",e),a.addEventListener("drop",f),a.addEventListene                                                                                        r("change",f))}(function(a){for(var f,b=a.head=a.getElementsByTagName("head")[0]                                                                                        ||a.documentElement,c="article aside audio bdi canvas data datalist details figc                                                                                        aption figure footer header hgroup mark meter nav output picture progress sectio                                                                                        n summary time video x".split(" "),d=c.length,e=0;d>e;)f=a.createElement(c[++e])                                                                                        ;return f.innerHTML="x<style>article,aside,details,figcaption,figure,footer,head                                                                                        er,hgroup,nav,section{display:block}audio[controls],canvas,video{display:inline-                                                                                        block}[hidden],audio{display:none}mark{background:#FF0;color:#000}</style>",b.in                                                                                        sertBefore(f.lastChild,b.firstChild)})(document),function(a,b,c,d){function e(){                                                                                        }e.prototype.length=c.length,b.matchesSelector=b.matchesSelector||b.mozMatchesSe                                                                                        lector||b.msMatchesSelector||b.oMatchesSelector||b.webkitMatchesSelector||functi                                                                                        on(a){return c.indexOf.call(this.parentNode.querySelectorAll(a),this)>-1},b.ance                                                                                        storQuerySelectorAll=b.ancestorQuerySelectorAll||b.mozAncestorQuerySelectorAll||                                                                                        b.msAncestorQuerySelectorAll||b.oAncestorQuerySelectorAll||b.webkitAncestorQuery                                                                                        SelectorAll||function(a){for(var b=this,d=new e;b=b.parentElement;)b.matchesSele                                                                                        ctor(a)&&c.push.call(d,b);return d},b.ancestorQuerySelector=b.ancestorQuerySelec                                                                                        tor||b.mozAncestorQuerySelector||b.msAncestorQuerySelector||b.oAncestorQuerySele                                                                                        ctor||b.webkitAncestorQuerySelector||function(a){return this.ancestorQuerySelect                                                                                        orAll(a)[0]||null}}(this,Element.prototype,Array.prototype),window.addEventListe                                                                                        ner&&document.addEventListener("DOMContentLoaded",onContentLoad);
+    </script>
+  </head>
+  <body>
+    <div id="wrapper">
+      <header>
+        <h1>Invoice</h1>
+        <address >
+          <p>{{client.client_name}}</p>
+          <p><br>{{client.client_vat}}</p>
+          <p>{{client.client_address_1}}</p>
+          <p>{{client.client_city}}</p>
+        </address>
+  <span><img alt="" src="{{qr_image}}">
+
+  </span>
+      </header>
+      <article>
+        <h1>Recipient</h1>
+        <address >
+          <p>Front Invoice<br>Inc</p>
+        </address>
+        <table class="meta">
+          <tr>
+            <th><span >Invoice #</span></th>
+            <td><span >{{invoice.invoice_number}}</span></td>
+          </tr>
+          <tr>
+            <th><span >Date</span></th>
+            <td><span >{{invoice.invoice_date_created}}</span></td>
+          </tr>
+          <tr>
+            <th><span >Amount Due</span></th>
+            <td><span id="prefix" >$</span><span>600.00</span></t                                                                                        d>
+          </tr>
+        </table>
+        <table class="inventory">
+          <thead>
+            <tr>
+              <th><span >Item</span></th>
+              <th><span >Description</span></th>
+              <th><span >Rate</span></th>
+              <th><span >Quantity</span></th>
+              <th><span >Price</span></th>
+            </tr>
+          </thead>
+          <tbody>
+              {% for item in items %}
+            <tr>
+              <td>{{item.item}}</td>
+              <td>{{item.item_description}}</td>
+              <td>{{item.item_tax_rate}}</td>
+              <td>{{item.item_quantity}}</td>
+              <td>{{item.item_price}}</td>
+            </tr>
+              {% endfor %}
+          </tbody>
+        </table>
+        <a class="add">+</a>
+        <table class="balance">
+               <tr>
+            <th><span >Tax Total</span></th>
+            <td><span data-prefix>$</span><span>{{amounts.invoice_tax_total}}</span></td>
+          </tr>
+          <tr>
+          <tr>
+            <th><span >Total</span></th>
+            <td><span data-prefix>$</span><span>{{amounts.invoice_total}}</span></td>
+          </tr>
+          <tr>
+            <th><span >Amount Paid</span></th>
+            <td><span data-prefix>$</span><span >{{amounts.invoice_paid}}</span></td>
+          </tr>
+          <tr>
+            <th><span >Balance Due</span></th>
+            <td><span data-prefix>$</span><span>{{amounts.invoice_balance}}</span></td>
+          </tr>
+        </table>
+      </article>
+      <aside>
+        <h1><span >Additional Notes</span></h1>
+        <div >
+          <p>A finance charge of 1.5% will be made on unpaid balances after 30 d                                                                                        ays.</p>
+        </div>
+      </aside>
+    </div>
+  </body>
+</html>

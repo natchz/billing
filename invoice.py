@@ -6,37 +6,14 @@ import base64
 from datetime import datetime
 from lxml import etree
 from lxml.builder import ElementMaker
-from zeep import Client
-from zeep.plugins import HistoryPlugin
 from filenames import ws_zip_file, file_name
 import pathlib
-# customer nit, username, token,
 
 TODAY = datetime.today().date()
 pathlib.Path('invoices/{}'.format(TODAY)).mkdir(parents=True, exist_ok=True)
 
 
-def send_invoice():
-    history = HistoryPlugin()
-    wsdl = 'http://localhost/facturaElectronica.wsdl'
-    client = Client(wsdl=wsdl, plugins=[history])
-    encoded = base64.b64encode(b'data to be encoded')
-    # print(client.service.EnvioFacturaElectronica("1015420690", "001", datetime.today(), encoded))
-    # print(history.last_sent)
-    from lxml import etree as ET
-    #
-    # <your setup code for zeep here>
-    #
-    node = client.create_message(client.service, 'EnvioFacturaElectronica', "1015420690", "001", datetime.today(),
-                                 encoded)
-    tree = ET.ElementTree(node)
-    tree.write('test.xml', pretty_print=True)
-
-def save_ack(ws_resp):
-    # write the ack from the sending fucntion
-    pass
-
-def invoice_to_xml(invoice_id, client, items, customer_nit):
+def invoice_to_xml(invoice_id, client, items, issuer):
 
     # http://forums.whirlpool.net.au/archive/1975786
     NSMAP = {
@@ -99,8 +76,8 @@ def invoice_to_xml(invoice_id, client, items, customer_nit):
     sts_e.InvoiceSource(cbc_e.IdentificationCode)
     ,sts_e.SoftwareProvider(
     sts_e.ProviderID
-    ,sts_e.SoftwareID)
-    ,sts_e.SoftwareSecurityCode
+    ,sts_e.SoftwareID(issuer["soft_id"]))
+    ,sts_e.SoftwareSecurityCode(issuer["soft_security_code"])
     )),
         ext_e.UBLExtension(ext_e.ExtensionContent(ds_e.Signature(ds_e.SignedInfo),
                                                   ds_e.Object(
@@ -140,7 +117,7 @@ def invoice_to_xml(invoice_id, client, items, customer_nit):
                                                                             , cbc_e.CityName(client["client_city"])
                                                                             , cbc_e.CountrySubentity
                                                                             , cac_e.AddressLine(cbc_e.Line(client["client_address_1"]))
-                                                                            , cac_e.Country(cbc_e.IdentificationCode)
+                                                                            , cac_e.Country(cbc_e.IdentificationCode(client["client_country"]))
                                                                             )), fe_e.PartyTaxScheme(
                     cbc_e.TaxLevelCode,
                     cac_e.TaxScheme
@@ -169,9 +146,9 @@ cbc_e.ID("{}".format(item["item_name"]))
     for item in items
    ]
     )
-    etree.ElementTree(root).write("invoices/{}/{}".format(TODAY,file_name(customer_nit)),xml_declaration=True, encoding='UTF-8', standalone=False,
+    etree.ElementTree(root).write("invoices/{}/{}".format(TODAY,file_name(issuer["nit"],invoice_id)),xml_declaration=True, encoding='UTF-8', standalone=False,
 pretty_print = True)
-    ws_zip_file("invoices/{}/".format(TODAY),file_name(customer_nit))
+    ws_zip_file("invoices/{}/".format(TODAY), file_name(issuer["nit"],invoice_id))
 
 def get_xpath():
 

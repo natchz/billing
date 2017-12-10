@@ -1,15 +1,19 @@
 import qrcode
+from db.model import *
+from security import CUFE
 
-def fill_qr_data(NumFac, FecFac, NitFac, DocAdq, ValFac, ValIva, ValOtroIm, ValFacIm, CUFE):
-    qr_data={"NumFac":NumFac
-    ,"FecFac":FecFac
-    ,"NitFac":NitFac
-    ,"DocAdq":DocAdq
-    ,"ValFac":ValFac
-    ,"ValIva":ValIva
-    ,"ValOtroIm":ValOtroIm
-    ,"ValFacIm":ValFacIm
-    ,"CUFE":CUFE}
+def get_qr_data(invoice_id):
+
+    data,cufe,iva,otro_imp,fac_imp = CUFE(invoice_id)
+    qr_data={"NumFac":data[0]
+    ,"FecFac":IpInvoices.select(IpInvoices.invoice_date_created).where(IpInvoices.invoice == invoice_id)
+    ,"NitFac":data[2]
+    ,"DocAdq":data[4]
+    ,"ValFac":data[1]
+    ,"ValIva":iva
+    ,"ValOtroIm":otro_imp
+    ,"ValFacIm":fac_imp
+    ,"CUFE":cufe}
     return qr_data
 
 def create_qr(qr_data):
@@ -24,8 +28,4 @@ def create_qr(qr_data):
     qr.add_data(qr_data)
     qr.make(fit=True)
     img = qr.make_image()
-    img.save("qr/{}.png".format(CUFE))
-
-qr_data = fill_qr_data("A02F-00117836", "20140319105605", "808183133", "8081972684", "1000.00", "160.00", "0.00",
-                       "1160.00", "2836a15058e90baabbf6bf2e97f05564ea0324a6")
-create_qr(qr_data)
+    img.save("utils/qr/{}.png".format(CUFE))
