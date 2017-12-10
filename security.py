@@ -49,9 +49,9 @@ def CUFE(invoice_id):
 SELECT i.invoice_number,ia.invoice_item_subtotal,id.nit,
 case when cc.client_custom_fieldid = 3 and cc.client_custom_fieldvalue = ''
 then "01"
-when cc.client_custom_fieldid = 3 and cc.client_custom_fieldvalue = 5
+when cc.client_custom_fieldid = 3 and cc.client_custom_fieldvalue = 7
 then "01"
-when cc.client_custom_fieldid = 3 and cc.client_custom_fieldvalue = 6
+when cc.client_custom_fieldid = 3 and cc.client_custom_fieldvalue = 8
 then "02"
 end,cl.client_vat_id, "tec_key"
 FROM ip_invoices AS i, ip_clients AS cl, ip_invoice_amounts AS ia, ip_invoice_tax_rates it, issuerdata AS id,

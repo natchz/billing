@@ -1,6 +1,9 @@
 import qrcode
 from db.model import *
 from security import CUFE
+import base64
+import requests
+
 
 def get_qr_data(invoice_id):
 

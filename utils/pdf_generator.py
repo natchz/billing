@@ -12,7 +12,11 @@ def loader(invoice,client,items,amounts,issuer):
     template_source = env.loader.get_source(env, temp_name)[0]
     parsed_content = env.parse(template_source)
     variables = meta.find_undeclared_variables(parsed_content)
-    temp_st = template.render(invoice=invoice,client=client,items=items,amounts=amounts[0], issuer=issuer) #qr_image='imagen')
+    print(issuer)
+    temp_st = template.render(invoice=invoice,client=client,
+                              items=items,amounts=amounts[0],
+                              issuer=issuer,logo=r"C:\Users\german\PycharmProjects\billing\logo.png",
+                              qr_image=r'C:\Users\german\PycharmProjects\billing\utils\qr\1e364b78a953e7b06254d040649969ab6eb68da9.png')
     pdfkit.from_string(temp_st, '{}.pdf'.format(invoice.invoice),configuration=config)
     #pdfkit.from_file(temp_st, 'out1_flsk.pdf')
 
