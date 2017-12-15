@@ -1,15 +1,14 @@
 import qrcode
 from db.model import *
-from security import CUFE
-import base64
-import requests
+from security import CUFE,invoice_datetime_java_format
+
 
 
 def get_qr_data(invoice_id):
-
+    fec_inv = invoice_datetime_java_format(invoice_id)
     data,cufe,iva,otro_imp,fac_imp = CUFE(invoice_id)
     qr_data={"NumFac":data[0]
-    ,"FecFac":IpInvoices.select(IpInvoices.invoice_date_created).where(IpInvoices.invoice == invoice_id)
+    ,"FecFac":fec_inv
     ,"NitFac":data[2]
     ,"DocAdq":data[4]
     ,"ValFac":data[1]

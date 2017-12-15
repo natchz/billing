@@ -3,7 +3,7 @@ from datetime import datetime
 from invoice import invoice_to_xml
 from utils.qr_generator import create_qr,get_qr_data
 from utils import pdf_generator
-
+from security import CUFE
 TODAY = datetime.today().date()
 
 def get_customer(cust_id):
@@ -23,13 +23,13 @@ def get_invoices():
     Issue = Issuer.select().dicts()
     issuer = Issue[0]
     for invoice in invoices:
+        cufe = CUFE(invoice.invoice)
         client = get_customer(invoice.client)
         items,amounts = get_items(invoice.invoice)
-
-        #invoice_to_xml(invoice.invoice, client, items,issuer)
-        create_qr(get_qr_data(invoice.invoice))
-        from utils.pdf_generator import loader
-        loader(invoice,client,items,amounts,issuer)
+        invoice_to_xml(invoice.invoice, client, items,issuer)
+        #create_qr(get_qr_data(invoice.invoice))
+        #from utils.pdf_generator import loader
+        #loader(invoice,client,items,amounts,issuer,cufe)
 
 def get_debit_notes():
     debit_notes = IpQuotes.select().where(IpQuotes.quote_date_created == TODAY)

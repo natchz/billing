@@ -14,12 +14,6 @@ def invoice_datetime_java_format(invoice_id):
     java_format = "%Y%m%d%H%M%S"
     return datetime.strftime(inv_datetime,java_format)
 
-
-def invoice_seq():
-    seq = Audit.get(Audit.last_invoice_sequence)
-    total_invoices = IpInvoices.select().count()
-    return seq
-
 def hash(hash_type, input_text):
     '''Hash input_text with the algorithm choice'''
     hash_funcs = {'MD5' : hashlib.md5,
@@ -44,7 +38,7 @@ GROUP BY item_tax_rate_id
     return result[0]
 
 def CUFE(invoice_id):
-    print(invoice_id)
+
     cursor = database.execute_sql("""
 SELECT i.invoice_number,ia.invoice_item_subtotal,id.nit,
 case when cc.client_custom_fieldid = 3 and cc.client_custom_fieldvalue = ''
@@ -77,5 +71,18 @@ LIMIT 1
                                                             data[3],
                                                             data[4],
                                                             data[5]).encode('utf-8'))
-
+    print(cufe)
     return data,cufe,tax_1,(tax_2+tax_3),(tax_1+tax_2+tax_3)
+
+def sign_xml():
+    from lxml import etree
+    from signxml import XMLSigner, XMLVerifier
+    xml_inv = open("inv_ex.xml","rb").read()
+    cert = open("certificate.crt","rb").read()
+    key = open("key.key","rb").read()
+    root = etree.fromstring(xml_inv)
+    signed_root = XMLSigner().sign(root, key=key, cert=cert)
+    etree.ElementTree(signed_root).write("i_signed.xml",encoding='UTF-8',pretty_print=True,inclusive_ns_prefixes=True)
+    #verified_data = XMLVerifier().verify(signed_root).signed_xml
+
+sign_xml()

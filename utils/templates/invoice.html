@@ -166,18 +166,22 @@
         <h1>Invoice</h1>
 
         <address >
-          <p>     {{issuer.nit}}      </p>
-          <p><br>  {{issuer.key}}
-  </p>{{issuer.contract_number}}
+                    <p><br>  {{issuer.key}}  </p>
+          <p> <br>    {{issuer.nit}}      </p>
+        <p><br>{{issuer.soft_id}}  </p>
 
         </address>
   <span><img alt="" src="{{logo}}">
   </span>
       </header>
       <pr>    <br></pr>
-      <pr>{{client.client_name}}         <br></pr>
+      <pr>{{client.client_name}},{{client.client_surname}} <br></pr>
+
       <pr>{{client.client_vat}}          <br></pr>
  <pr>{{client.client_address_1}} <br></pr>
+       <pr>{{client.client_email}} <br></pr>
+
+
 
 
       <article>
@@ -196,7 +200,7 @@
           </tr>
           <tr>
             <th><span >Amount Due</span></th>
-            <td><span id="prefix" >$</span><span>600.00</span></t                                                                                        d>
+            <td><span id="prefix" >$</span><span>{{amounts.invoice_balance}}</span></t                                                                                        d>
           </tr>
         </table>
         <table class="inventory">
