@@ -16,7 +16,7 @@ def loader(invoice,client,items,amounts,issuer,cufe):
                               items=items,amounts=amounts[0],
                               issuer=issuer,logo=r"C:\Users\german\PycharmProjects\billing\logo.png",
                               qr_image=r'C:\Users\german\PycharmProjects\billing\utils\qr\{}.png'.format(cufe[1]))
-    pdfkit.from_string(temp_st, '{}.pdf'.format(invoice.invoice),configuration=config)
+    pdfkit.from_string(temp_st, '{}.pdf'.format(invoice["invoice"]),configuration=config)
     #pdfkit.from_file(temp_st, 'out1_flsk.pdf')
 
 

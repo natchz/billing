@@ -8,58 +8,48 @@ from lxml import etree
 from lxml.builder import ElementMaker
 from filenames import ws_zip_file, file_name
 import pathlib
+from security.security import sign_xml
 
 TODAY = datetime.today().date()
 pathlib.Path('invoices/{}'.format(TODAY)).mkdir(parents=True, exist_ok=True)
+NSMAP = {
+    "fe": "http://www.dian.gov.co/contratos/facturaelectronica/v1"
+    , "cac": "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+    , "cbc": "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+    , "clm54217": "urn:un:unece:uncefact:codelist:specification:54217:2001"
+    , "clm66411": "urn:un:unece:uncefact:codelist:specification:66411:2001"
+    , "clmIANAMIMEMediaType": "urn:un:unece:uncefact:codelist:specification:IANAMIMEMediaType:2003"
+    , "ext": "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+    , "qdt": "urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2"
+    , "sts": "http://www.dian.gov.co/contratos/facturaelectronica/v1/Structures"
+    , "udt": "urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"
+    , "ds": "urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"
+    , "xades": "urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"
+    , "xsi": "http://www.w3.org/2001/XMLSchema-instance"}
 
+fe_e = ElementMaker(
+    namespace=NSMAP['fe'],
+    nsmap=NSMAP
+)
+ext_e = ElementMaker(
+    namespace=NSMAP['ext'],
+    nsmap=NSMAP)
+
+cac_e = ElementMaker(
+    namespace=NSMAP['cac'],
+    nsmap=NSMAP
+)
+cbc_e = ElementMaker(
+    namespace=NSMAP['cbc'],
+    nsmap=NSMAP
+)
+sts_e = ElementMaker(
+    namespace=NSMAP['sts'],
+    nsmap=NSMAP
+)
 
 def invoice_to_xml(invoice_id, client, items, issuer):
     # http://forums.whirlpool.net.au/archive/197578
-    NSMAP = {
-        "fe": "http://www.dian.gov.co/contratos/facturaelectronica/v1"
-        , "cac": "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-        , "cbc": "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-        , "clm54217": "urn:un:unece:uncefact:codelist:specification:54217:2001"
-        , "clm66411": "urn:un:unece:uncefact:codelist:specification:66411:2001"
-        , "clmIANAMIMEMediaType": "urn:un:unece:uncefact:codelist:specification:IANAMIMEMediaType:2003"
-        , "ext": "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
-        , "qdt": "urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2"
-        , "sts": "http://www.dian.gov.co/contratos/facturaelectronica/v1/Structures"
-        , "udt": "urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"
-        # dummy ,ds,xades
-        , "ds": "urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"
-        , "xades": "urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"
-        , "xsi": "http://www.w3.org/2001/XMLSchema-instance"}
-
-    fe_e = ElementMaker(
-        namespace=NSMAP['fe'],
-        nsmap=NSMAP
-    )
-    ext_e = ElementMaker(
-        namespace=NSMAP['ext'],
-        nsmap=NSMAP)
-
-    cac_e = ElementMaker(
-        namespace=NSMAP['cac'],
-        nsmap=NSMAP
-    )
-    cbc_e = ElementMaker(
-        namespace=NSMAP['cbc'],
-        nsmap=NSMAP
-    )
-    sts_e = ElementMaker(
-        namespace=NSMAP['sts'],
-        nsmap=NSMAP
-    )
-    ds_e = ElementMaker(
-        namespace=NSMAP['ds'],
-        nsmap=NSMAP
-    )
-    xades_e = ElementMaker(
-        namespace=NSMAP['xades'],
-        nsmap=NSMAP
-    )
-
     # Global Attributes
     uuid_att = {"schemeAgencyID": "195"
         , "schemeAgencyName": "CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)"
@@ -76,78 +66,30 @@ def invoice_to_xml(invoice_id, client, items, issuer):
 
     tax_amount_att = {"currencyID": "COP"}
 
+    signs = {"ds":"http://www.w3.org/2000/09/xmldsig#"}
+    sig_maker = ElementMaker(namespace=signs.get("ds"),nsmap=signs)
+    sig_att = {"Id":"placeholder"}
     root = fe_e.Invoice(
         ext_e.UBLExtensions(ext_e.UBLExtension(ext_e.ExtensionContent(sts_e.DianExtensions
-            (sts_e.InvoiceControl
-            (sts_e.InvoiceAuthorization(
-            "udt:NumericType | | xsd: decimal),"
+            (sts_e.InvoiceControl(sts_e.InvoiceAuthorization("t:NumericType | | xsd: decimal),")
             , sts_e.AuthorizationPeriod(cbc_e.StartDate
-                                        ,
-                                        cbc_e.EndDate)
+            ,cbc_e.EndDate)
             , sts_e.AuthorizedInvoices(
                 sts_e.Prefix
                 , sts_e.From
                 , sts_e.To)
         ),
-            sts_e.InvoiceSource(
-                cbc_e.IdentificationCode(
-                    "qdt:CountryIdentificationCodeType || xsd:string)"
-                ),
-                sts_e.SoftwareProvider(
-                    sts_e.ProviderID,
-                    sts_e.SoftwareID(
-                        "fc7bab96-4a9c-4443-98fc-447ecd1a53b6"
-                    )
-                )
-
-            ),
-            sts_e.InvoiceSource(cbc_e.IdentificationCode)
-            , sts_e.SoftwareProvider(
+            sts_e.InvoiceSource(cbc_e.IdentificationCode("qdt:CountryIdentificationCodeType || xsd:string)"
+                )),
+            sts_e.SoftwareProvider(
             sts_e.ProviderID
             , sts_e.SoftwareID(issuer["soft_id"]))
             , sts_e.SoftwareSecurityCode(
             issuer["soft_security_code"])
-        )),
+        ))),
             ext_e.UBLExtension(ext_e.ExtensionContent(
-                ds_e.Signature(ds_e.SignedInfo(
-                    ds_e.CanonicalizationMethod(
-                        Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315")
-                    , ds_e.SignatureMethod(
-                        Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha-1")
-                    , ds_e.Reference(ds_e.Transforms
-                                     , ds_e.DigestMethod
-                                     , ds_e.DigestValue)
-                    , ds_e.Reference(ds_e.DigestMethod
-                                     , ds_e.DigestValue
-                                     )
-                    , ds_e.Reference(ds_e.DigestMethod
-                                     , ds_e.DigestValue)),
-                    ds_e.SignatureValue,
-                    ds_e.KeyInfo(ds_e.X509Data),
-                    ds_e.Object(
-                        xades_e.QualifyingProperties(
-                            xades_e.SignedProperties(
-                                xades_e.SigningTime
-                                , xades_e.SigningCertificate(
-                                    xades_e.Cert,
-                                    xades_e.Cert,
-                                    xades_e.Cert)
-                                ,
-                                xades_e.SignaturePolicyIdentifier
-                                , xades_e.SignerRole(
-                                    xades_e.ClaimedRoles)),
-                            xades_e.SignaturePolicyIdentifier(
-                                xades_e.SignaturePolicyId(
-                                    xades_e.SigPolicyId(
-                                        xades_e.Identifier)
-                                    , xades_e.SigPolicyHash(
-                                        ds_e.DigestMethod(
-                                            Algorithm="http://www.w3.org/2000/09/xmldsig#sha-1")
-                                        , ds_e.DigestValue)
-                                ))
-                        )
-                    )
-                ))))
+                sig_maker.Signature(sig_att)
+                )))
             , cbc_e.UBLVersionID()
             , cbc_e.CustomizationID()
             , cbc_e.ProfileID()
@@ -215,16 +157,17 @@ def invoice_to_xml(invoice_id, client, items, issuer):
             )
                 for item in items
                 ]
-        )))
+)
+
     etree.ElementTree(root).write("invoices/{}/{}".format(TODAY, file_name(issuer["nit"], invoice_id)),
                                   xml_declaration=True, encoding='UTF-8', standalone=False,
                                   pretty_print=True)
+    sign_xml("invoices/{}/{}".format(TODAY, file_name(issuer["nit"], invoice_id)))
     ws_zip_file("invoices/{}/".format(TODAY), file_name(issuer["nit"], invoice_id))
-
 
 def get_xpath():
     from lxml import etree
-    with open("inv_ex.xml", "rb") as f:
+    with open("inv.xml", "rb") as f:
         data = f.read()
     root = etree.fromstring(data)
     tree = etree.ElementTree(root)
@@ -233,5 +176,5 @@ def get_xpath():
 
 
 if __name__ == "__main__":
-    pass
-    # get_xpath()
+    #pass
+    get_xpath()

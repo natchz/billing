@@ -2,34 +2,34 @@ from db.model import *
 from datetime import datetime
 from invoice import invoice_to_xml
 from utils.qr_generator import create_qr,get_qr_data
-from utils import pdf_generator
-from security import CUFE
+from security.security import CUFE
+from utils.pdf_generator import loader
+from queries import *
 TODAY = datetime.today().date()
 
 def get_customer(cust_id):
-    cust = IpClients.select().where(IpClients.client == cust_id).dicts()
-    return cust[0]
+    cust_info = customer_info(cust_id)
+    return cust_info
 
 def get_items(inv_id):
-    items = IpInvoiceItems.select().where(IpInvoiceItems.invoice == inv_id).dicts()
-    items=items.peek(items.__len__())
-    amounts = IpInvoiceAmounts.select().where(IpInvoiceAmounts.invoice == inv_id).dicts()
-    amounts=amounts.peek(items.__len__())
-
+    items = get_items_info(inv_id)
+    amounts = get_amounts_info(inv_id)
     return items,amounts
 
 def get_invoices():
-    invoices = IpInvoices.select().where(IpInvoices.invoice_date_created == TODAY)
-    Issue = Issuer.select().dicts()
-    issuer = Issue[0]
+
+    invoices = get_invoices_id(TODAY)
+    issuer = get_issuer()
+
     for invoice in invoices:
-        cufe = CUFE(invoice.invoice)
-        client = get_customer(invoice.client)
-        items,amounts = get_items(invoice.invoice)
-        invoice_to_xml(invoice.invoice, client, items,issuer)
-        #create_qr(get_qr_data(invoice.invoice))
-        #from utils.pdf_generator import loader
-        #loader(invoice,client,items,amounts,issuer,cufe)
+        print(invoice)
+        cufe = CUFE(invoice["invoice"])
+        print(invoice["client"])
+        client = get_customer(invoice["client"])
+        items,amounts = get_items(invoice["invoice"])
+        invoice_to_xml(invoice["invoice"], client, items,issuer)
+        create_qr(get_qr_data(invoice["invoice"]))
+        loader(invoice,client,items,amounts,issuer,cufe)
 
 def get_debit_notes():
     debit_notes = IpQuotes.select().where(IpQuotes.quote_date_created == TODAY)
@@ -48,5 +48,3 @@ def get_credit_notes():
         client = get_customer(credit_note.client)
         items = get_items(credit_note.quote)
         invoice_to_xml(credit_note.quote, client, items, issuer)
-
-get_invoices()

@@ -1,4 +1,4 @@
-from fetching import get_invoices,get_credit_notes,get_debit_notes
+from fetch_documents import get_invoices,get_credit_notes,get_debit_notes
 from webservice import ws_send_invoice
 from datetime import datetime
 from os import listdir
@@ -15,6 +15,8 @@ get_invoices()
 for zip_file in listdir(INVOICE_FILES):
     if zip_file.endswith(".zip"):
         ws_send_invoice(INVOICE_FILES+zip_file)
+
+"""
 #--for debit notes
 #get_debit_notes()
 for zip_file in listdir(DEBIT_FILES):
@@ -25,3 +27,4 @@ for zip_file in listdir(DEBIT_FILES):
 for zip_file in listdir(CREDIT_FILES):
     if zip_file.endswith(".zip"):
         ws_send_invoice(CREDIT_FILES+zip_file)
+"""
