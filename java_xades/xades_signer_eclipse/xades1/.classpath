@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="C:/Users/german/eclipse-workspace/xades1/aopalliance-1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/german/eclipse-workspace/xades1/bcpkix-jdk15on-1.56.jar"/>
+	<classpathentry kind="lib" path="C:/Users/german/eclipse-workspace/xades1/bcprov-jdk15on-1.56.jar"/>
+	<classpathentry kind="lib" path="C:/Users/german/eclipse-workspace/xades1/commons-codec-1.10.jar"/>
+	<classpathentry kind="lib" path="C:/Users/german/eclipse-workspace/xades1/guice-2.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/german/eclipse-workspace/xades1/guice-multibindings-2.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/german/eclipse-workspace/xades1/slf4j-api-1.7.22.jar"/>
+	<classpathentry kind="lib" path="C:/Users/german/eclipse-workspace/xades1/stax2-api-3.1.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/german/eclipse-workspace/xades1/stax-api-1.0-2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/german/eclipse-workspace/xades1/woodstox-core-asl-4.4.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/german/eclipse-workspace/xades1/xades4j-1.4.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/german/eclipse-workspace/xades1/xmlsec-2.0.9.jar"/>
+	<classpathentry kind="lib" path="C:/Users/german/eclipse-workspace/xades1/slf4j-simple-1.7.22.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

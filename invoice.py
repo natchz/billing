@@ -8,7 +8,7 @@ from lxml import etree
 from lxml.builder import ElementMaker
 from filenames import ws_zip_file, file_name
 import pathlib
-from security.security import sign_xml
+from security.security import sign_invoice
 
 TODAY = datetime.today().date()
 pathlib.Path('invoices/{}'.format(TODAY)).mkdir(parents=True, exist_ok=True)
@@ -66,9 +66,6 @@ def invoice_to_xml(invoice_id, client, items, issuer):
 
     tax_amount_att = {"currencyID": "COP"}
 
-    signs = {"ds":"http://www.w3.org/2000/09/xmldsig#"}
-    sig_maker = ElementMaker(namespace=signs.get("ds"),nsmap=signs)
-    sig_att = {"Id":"placeholder"}
     root = fe_e.Invoice(
         ext_e.UBLExtensions(ext_e.UBLExtension(ext_e.ExtensionContent(sts_e.DianExtensions
             (sts_e.InvoiceControl(sts_e.InvoiceAuthorization("t:NumericType | | xsd: decimal),")
@@ -88,7 +85,6 @@ def invoice_to_xml(invoice_id, client, items, issuer):
             issuer["soft_security_code"])
         ))),
             ext_e.UBLExtension(ext_e.ExtensionContent(
-                sig_maker.Signature(sig_att)
                 )))
             , cbc_e.UBLVersionID()
             , cbc_e.CustomizationID()
@@ -162,7 +158,7 @@ def invoice_to_xml(invoice_id, client, items, issuer):
     etree.ElementTree(root).write("invoices/{}/{}".format(TODAY, file_name(issuer["nit"], invoice_id)),
                                   xml_declaration=True, encoding='UTF-8', standalone=False,
                                   pretty_print=True)
-    sign_xml("invoices/{}/{}".format(TODAY, file_name(issuer["nit"], invoice_id)))
+    sign_invoice("invoices/{}/{}".format(TODAY, file_name(issuer["nit"], invoice_id)))
     ws_zip_file("invoices/{}/".format(TODAY), file_name(issuer["nit"], invoice_id))
 
 def get_xpath():

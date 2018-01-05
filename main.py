@@ -1,4 +1,4 @@
-from fetch_documents import get_invoices,get_credit_notes,get_debit_notes
+from fetch_invoices import get_invoices,get_credit_notes,get_debit_notes
 from webservice import ws_send_invoice
 from datetime import datetime
 from os import listdir

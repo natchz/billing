@@ -5,13 +5,10 @@ from lxml.builder import ElementMaker
 from lxml import etree
 import signxml
 from signxml import XMLSigner
+from os import remove
+import subprocess
 
 TODAY = datetime.today().date()
-
-def signed_time():
-    return str(datetime.today().now())
-
-
 
 def invoice_datetime_java_format(invoice_id):
     invoice = IpInvoices.get(IpInvoices.invoice == invoice_id)
@@ -30,12 +27,6 @@ def hash(hash_type, input_text):
                   'SHA384' : hashlib.sha384,
                   'SHA512' : hashlib.sha512}
     return hash_funcs[hash_type](input_text).hexdigest()
-
-
-def cert_hash():
-    with open("security/certificates/certificate.crt","r") as c:
-        cert = c.read().encode('utf-8')
-        return hash("SHA1", cert)
 
 def total_taxes(invoice_id,tax_id):
     cursor = database.execute_sql("""
@@ -66,12 +57,10 @@ ip_client_custom AS cc
 WHERE i.invoice_id = {} AND i.client_id = cl.client_id AND ia.invoice_id = i.invoice_id AND cc.client_id = cl.client_id
 LIMIT 1
 """.format(invoice_id))
-
     data = cursor.fetchone()
     tax_1 = total_taxes(invoice_id,1)
     tax_2 = total_taxes(invoice_id,2)
     tax_3 = total_taxes(invoice_id,3)
-
     cufe = hash('SHA1', "{}{}{}{}{}{}{}{}{}{}{}{}{}".format(data[0],
                                                             invoice_datetime_java_format(invoice_id),
                                                             data[1],
@@ -85,69 +74,16 @@ LIMIT 1
                                                             data[5]).encode('utf-8'))
     return data,cufe,tax_1,(tax_2+tax_3),(tax_1+tax_2+tax_3)
 
-
-signs = {"ds": "http://www.w3.org/2000/09/xmldsig#"}
-sig_maker = ElementMaker(namespace=signs.get("ds"), nsmap=signs)
-sig_att = {"Id": "placeholder"}
-
-xades_ns = {"xades":"http://uri.etsi.org/01903/v1.3.2#",
-"xades141":"http://uri.etsi.org/01903/v1.4.1#"}
-
-xades_maker = ElementMaker(namespace=xades_ns.get("xades"),nsmap=xades_ns)
-
-def get_xades():
-
-    att_sha1 =  {"Algorithm":"http://www.w3.org/2000/09/xmldsig#sha-1"}
-    xades = sig_maker.Object(xades_maker.QualifyingProperties(xades_maker.SignedProperties(xades_maker.SignedSignatureProperties(xades_maker.SigningTime(signed_time()),
-
-                                                                                                                xades_maker.SigningCertificate(
-                                                                                                        xades_maker.Cert(xades_maker.CertDigest(
-                                                                                                                sig_maker.DigestMethod(att_sha1),
-                                                                                                               sig_maker.DigestValue(cert_hash())),
-                                                                                                                xades_maker.IssuerSerial(
-
-                                                                                                            sig_maker.X509IssuerName,
-                                                                                                                sig_maker.X509SerialNumber)),
-                                                                                                        xades_maker.Cert(xades_maker.CertDigest(
-                                                                                                                sig_maker.DigestMethod(att_sha1),
-                                                                                                                sig_maker.DigestValue(cert_hash())),
-                                                                                                            xades_maker.IssuerSerial(
-                                                                                                                sig_maker.X509IssuerName,
-                                                                                                                sig_maker.X509SerialNumber)),
-                                                                                                        xades_maker.Cert(xades_maker.CertDigest(
-                                                                                                                sig_maker.DigestMethod(att_sha1),
-                                                                                                                sig_maker.DigestValue(cert_hash())),
-                                                                                                            xades_maker.IssuerSerial(sig_maker.X509IssuerName,
-                                                                                                                sig_maker.X509SerialNumber)))
-                                                                                                    ,
-                                                                                                    xades_maker.SignaturePolicyIdentifier(
-                                                                                                        xades_maker.SignaturePolicyId(
-                                                                                                            xades_maker.SigPolicyId(
-                                                                                                                xades_maker.Identifier)
-                                                                                                            ,
-                                                                                                            xades_maker.SigPolicyHash(
-                                                                                                                sig_maker.DigestMethod(Algorithm="http://www.w3.org/2000/09/xmldsig#sha-1")
-                                                                                                                ,
-                                                                                                                sig_maker.DigestValue)))
-
-                                                                                                    ,
-                                                                                                    xades_maker.SignerRole(
-                                                                                                        xades_maker.ClaimedRoles(
-                                                                                                           xades_maker.ClaimedRole))))))
-    return xades
-
-
-def sign_xml(fname):
-
-    xml_inv = open(fname, "rb").read()
-    cert = open("security/certificates/certificate.crt","rb").read()
-    key = open("security/certificates/key.key", "rb").read()
-    root = etree.fromstring(xml_inv)
-    signed_root = XMLSigner(method=signxml.methods.enveloped).sign(root, key=key, cert=cert)
-    ns = {"ds":"http://www.w3.org/2000/09/xmldsig#"}
-    xades_space = signed_root.find(".//ds:KeyInfo",namespaces =ns)
-    xades = get_xades()
-    xades_space.addnext(xades)
-    etree.ElementTree(signed_root).write(fname, encoding='UTF-8', pretty_print=True,
-                                         inclusive_ns_prefixes=True)
-    # verified_data = XMLVerifier().verify(signed_root).signed_xml
+def sign_invoice(fname):
+    print(fname)
+    subprocess.check_call(["java","-jar","java_xades/xades_signer_v1.0.0.jar",fname,fname+"_signed"])
+    xml_fn = open(fname+"_signed", "rb").read()
+    root = etree.fromstring(xml_fn)
+    ns = {"ext": "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"}
+    ns_s = {"ds": "http://www.w3.org/2000/09/xmldsig#"}
+    location = root.findall(".//ext:ExtensionContent", namespaces=ns)
+    signtaure = root.find(".//ds:Signature", namespaces=ns_s)
+    location[1].append(signtaure)
+    etree.ElementTree(root).write(fname,xml_declaration=True, encoding='UTF-8', standalone=False,
+                                  pretty_print=True)
+    remove(fname+"_signed")

@@ -1,0 +1,11 @@
+import xades4j.providers.impl.KeyStoreKeyingDataProvider.KeyStorePasswordProvider;
+
+public class DirectPasswordProvider implements KeyStorePasswordProvider {
+
+	@Override
+	public char[] getPassword() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}
