@@ -1,8 +1,11 @@
+from xml.sax.saxutils import prepare_input_source
+
 import pdfkit
 from jinja2 import Environment, FileSystemLoader, Template, meta
 
 def loader(invoice,client,items,amounts,issuer,cufe):
-
+    print(invoice)
+    print(items,amounts)
 
     temp_name = "invoice.html"
     path_wkthmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'

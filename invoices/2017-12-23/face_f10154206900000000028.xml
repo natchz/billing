@@ -1,0 +1,236 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<fe:Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:clm54217="urn:un:unece:uncefact:codelist:specification:54217:2001" xmlns:clm66411="urn:un:unece:uncefact:codelist:specification:66411:2001" xmlns:clmIANAMIMEMediaType="urn:un:unece:uncefact:codelist:specification:IANAMIMEMediaType:2003" xmlns:ds="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:fe="http://www.dian.gov.co/contratos/facturaelectronica/v1" xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2" xmlns:sts="http://www.dian.gov.co/contratos/facturaelectronica/v1/Structures" xmlns:udt="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2" xmlns:xades="SOME_TOCHNA" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ext:UBLExtensions>
+    <ext:UBLExtension>
+      <ext:ExtensionContent>
+        <sts:DianExtensions>
+          <sts:InvoiceControl>
+            <sts:InvoiceAuthorization>123123</sts:InvoiceAuthorization>
+            <sts:AuthorizationPeriod>
+              <cbc:StartDate/>
+              <cbc:EndDate/>
+            </sts:AuthorizationPeriod>
+            <sts:AuthorizedInvoices>
+              <sts:Prefix>AA</sts:Prefix>
+              <sts:From>001</sts:From>
+              <sts:To>100</sts:To>
+            </sts:AuthorizedInvoices>
+          </sts:InvoiceControl>
+          <sts:InvoiceSource>
+            <cbc:IdentificationCode>qdt:CountryIdentificationCodeType || xsd:string)</cbc:IdentificationCode>
+          </sts:InvoiceSource>
+          <sts:SoftwareProvider>
+            <sts:ProviderID/>
+            <sts:SoftwareID>ABC123-32</sts:SoftwareID>
+          </sts:SoftwareProvider>
+          <sts:SoftwareSecurityCode>111000111</sts:SoftwareSecurityCode>
+        </sts:DianExtensions>
+      </ext:ExtensionContent>
+    </ext:UBLExtension>
+    <ext:UBLExtension>
+      <ext:ExtensionContent>
+        <ds:Signature>
+          <ds:SignedInfo>
+            <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+            <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha-1"/>
+            <ds:Reference>
+              <ds:Transforms>
+                <ds:Transform/>
+              </ds:Transforms>
+              <ds:DigestMethod/>
+              <ds:DigestValue/>
+            </ds:Reference>
+            <ds:Reference>
+              <ds:DigestMethod/>
+              <ds:DigestValue/>
+            </ds:Reference>
+            <ds:Reference>
+              <ds:DigestMethod/>
+              <ds:DigestValue/>
+            </ds:Reference>
+          </ds:SignedInfo>
+          <ds:SignatureValue/>
+          <ds:KeyInfo>
+            <ds:X509Data>
+              <ds:X509Certificate/>
+            </ds:X509Data>
+          </ds:KeyInfo>
+          <ds:Object>
+            <xades:QualifyingProperties>
+              <xades:SignedProperties>
+                <xades:SignedSignatureProperties>
+                  <xades:SigningTime>2017-12-23 12:16:16.511828</xades:SigningTime>
+                  <xades:SigningCertificate>
+                    <xades:Cert>
+                      <xades:CertDigest>
+                        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha-1"/>
+                        <ds:DigestValue>dee62cd682b8672139d9be22faf3104490f33534</ds:DigestValue>
+                      </xades:CertDigest>
+                      <xades:IssuerSerial>
+                        <ds:X509IssuerName/>
+                        <ds:X509SerialNumber/>
+                      </xades:IssuerSerial>
+                    </xades:Cert>
+                    <xades:Cert>
+                      <xades:CertDigest>
+                        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha-1"/>
+                        <ds:DigestValue>dee62cd682b8672139d9be22faf3104490f33534</ds:DigestValue>
+                      </xades:CertDigest>
+                      <xades:IssuerSerial>
+                        <ds:X509IssuerName/>
+                        <ds:X509SerialNumber/>
+                      </xades:IssuerSerial>
+                    </xades:Cert>
+                    <xades:Cert>
+                      <xades:CertDigest>
+                        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha-1"/>
+                        <ds:DigestValue>dee62cd682b8672139d9be22faf3104490f33534</ds:DigestValue>
+                      </xades:CertDigest>
+                      <xades:IssuerSerial>
+                        <ds:X509IssuerName/>
+                        <ds:X509SerialNumber/>
+                      </xades:IssuerSerial>
+                    </xades:Cert>
+                  </xades:SigningCertificate>
+                  <xades:SignaturePolicyIdentifier>
+                    <xades:SignaturePolicyId>
+                      <xades:SigPolicyId>
+                        <xades:Identifier/>
+                      </xades:SigPolicyId>
+                      <xades:SigPolicyHash>
+                        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha-1"/>
+                        <ds:DigestValue/>
+                      </xades:SigPolicyHash>
+                    </xades:SignaturePolicyId>
+                  </xades:SignaturePolicyIdentifier>
+                  <xades:SignerRole>
+                    <xades:ClaimedRoles>
+                      <xades:ClaimedRole/>
+                    </xades:ClaimedRoles>
+                  </xades:SignerRole>
+                </xades:SignedSignatureProperties>
+              </xades:SignedProperties>
+            </xades:QualifyingProperties>
+          </ds:Object>
+        </ds:Signature>
+      </ext:ExtensionContent>
+    </ext:UBLExtension>
+  </ext:UBLExtensions>
+  <cbc:UBLVersionID>2</cbc:UBLVersionID>
+  <cbc:CustomizationID/>
+  <cbc:ProfileID/>
+  <cbc:ID/>
+  <cbc:UUID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)" schemeName="CUFE" schemeURI="http://www.dian.gov.co/contratos/facturaelectronica/v1/anexo_v1_0.pdf#CUFE">7a16b122a648134185c67f4682d0954dabcea21c</cbc:UUID>
+  <cbc:IssueDate>2017-12-23</cbc:IssueDate>
+  <cbc:IssueTime>11:49:35</cbc:IssueTime>
+  <cbc:InvoiceTypeCode listAgencyID="195" listAgencyName="CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)" listSchemeURI="http://www.dian.gov.co/contratos/facturaelectronica/v1/InvoiceType"/>
+  <cbc:Note/>
+  <cbc:DocumentCurrencyCode>COP</cbc:DocumentCurrencyCode>
+  <fe:AccountingSupplierParty>
+    <cbc:AdditionalAccountID>codigo tipo perosna</cbc:AdditionalAccountID>
+    <fe:Party>
+      <cac:PartyIdentification>
+        <cbc:ID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)" schemeID="31"/>
+      </cac:PartyIdentification>
+      <cac:PartyName>
+        <cbc:Name/>
+      </cac:PartyName>
+      <fe:PhysicalLocation>
+        <fe:Address>
+          <cbc:CitySubdivisionName/>
+          <cbc:CityName></cbc:CityName>
+          <cbc:CountrySubentity/>
+          <cac:AddressLine>
+            <cbc:Line></cbc:Line>
+          </cac:AddressLine>
+          <cac:Country>
+            <cbc:IdentificationCode>LS</cbc:IdentificationCode>
+          </cac:Country>
+        </fe:Address>
+      </fe:PhysicalLocation>
+      <fe:PartyTaxScheme>
+        <cbc:TaxLevelCode>regimen simp,com,no</cbc:TaxLevelCode>
+        <cac:TaxScheme/>
+      </fe:PartyTaxScheme>
+      <fe:PartyLegalEntity>
+        <cbc:RegistrationName>PJ - 700085375</cbc:RegistrationName>
+      </fe:PartyLegalEntity>
+    </fe:Party>
+  </fe:AccountingSupplierParty>
+  <fe:AccountingCustomerParty>
+    <cbc:AdditionalAccountID>persona natural u otr??o</cbc:AdditionalAccountID>
+    <fe:Party>
+      <cac:PartyIdentification>
+        <cbc:ID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)" schemeID="31"/>
+      </cac:PartyIdentification>
+      <cac:PartyName>ChloePJ - 700085375 - Adquiriente FE</cac:PartyName>
+      <fe:PhysicalLocation>
+        <fe:Address>
+          <cbc:Department/>
+          <cbc:CitySubdivisionName/>
+          <cbc:CityName>NY</cbc:CityName>
+          <cbc:CountrySubentity/>
+          <cac:AddressLine>
+            <cbc:Line>Street 1023, park</cbc:Line>
+          </cac:AddressLine>
+          <cac:Country>
+            <cbc:IdentificationCode>GB</cbc:IdentificationCode>
+          </cac:Country>
+        </fe:Address>
+      </fe:PhysicalLocation>
+      <fe:PartyTaxScheme>
+        <cbc:TaxLevelCode>simp.com. codigo</cbc:TaxLevelCode>
+        <cac:TaxScheme/>
+      </fe:PartyTaxScheme>
+      <fe:PartyLegalEntity>
+        <cbc:RegistrationName>PJ - 700085375</cbc:RegistrationName>
+      </fe:PartyLegalEntity>
+      <fe:Person>
+        <cbc:FirstName>Chloe</cbc:FirstName>
+        <cbc:FamilyName>Sullivan</cbc:FamilyName>
+        <cbc:MiddleName/>
+      </fe:Person>
+    </fe:Party>
+  </fe:AccountingCustomerParty>
+  <fe:TaxTotal>
+    <cbc:TaxAmount currencyID="COP"/>
+    <cbc:TaxEvidenceIndicator>true or false</cbc:TaxEvidenceIndicator>
+    <fe:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="COP"/>
+      <cbc:TaxAmount currencyID="COP"/>
+      <cbc:Percent/>
+      <cac:TaxCategory>
+        <cac:TaxScheme>
+          <cbc:ID/>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </fe:TaxSubtotal>
+  </fe:TaxTotal>
+  <fe:LegalMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="COP"/>
+    <cbc:TaxExclusiveAmount currencyID="COP"/>
+    <cbc:PayableAmount currencyID="COP"/>
+  </fe:LegalMonetaryTotal>
+  <fe:InvoiceLine>
+    <cbc:ID>Xiaomi Huami Amazfit smart watch. ...</cbc:ID>
+    <cbc:InvoicedQuantity>1.00</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="COP"/>
+    <fe:Item>
+      <cbc:Description></cbc:Description>
+    </fe:Item>
+    <fe:Price>
+      <cbc:PriceAmount currencyID="COP">881.00</cbc:PriceAmount>
+    </fe:Price>
+  </fe:InvoiceLine>
+  <fe:InvoiceLine>
+    <cbc:ID>Xiaomi Mi FPV 4K drone. ...</cbc:ID>
+    <cbc:InvoicedQuantity>1.00</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="COP"/>
+    <fe:Item>
+      <cbc:Description></cbc:Description>
+    </fe:Item>
+    <fe:Price>
+      <cbc:PriceAmount currencyID="COP">796.00</cbc:PriceAmount>
+    </fe:Price>
+  </fe:InvoiceLine>
+</fe:Invoice>
