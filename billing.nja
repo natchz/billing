@@ -1,12 +1,12 @@
 {
-  "mainFile": "C:/Users/german/PycharmProjects/billing/main.py", 
+  "mainFile": "main.py", 
   "use-tabs": false, 
   "venv": "", 
   "relatedProjects": [], 
   "name": "billing", 
-  "license": "", 
+  "license": "GNU General Public License v3", 
   "url": "", 
-  "pythonPath": "python", 
+  "pythonPath": "python3", 
   "preExecScript": "", 
   "additional_builtins": [], 
   "programParams": "", 
@@ -22,9 +22,11 @@
     ".json", 
     ".js", 
     ".ini", 
-    ".*"
+    ".xml", 
+    ".pdf", 
+    ".txt"
   ], 
-  "project-type": "", 
+  "project-type": "Import from sources", 
   "postExecScript": "", 
   "description": ""
 }

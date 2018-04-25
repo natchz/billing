@@ -2,7 +2,7 @@ from peewee import *
 
 #python -m pwiz -e mysql -u root invoice > model.py
 
-database = MySQLDatabase('invoice', **{'user': 'root'})
+database = MySQLDatabase("invoice", host="localhost", port=3306, user="root", passwd="root")
 
 class UnknownField(object):
     def __init__(self, *_, **__): pass
