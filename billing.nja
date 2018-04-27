@@ -24,7 +24,7 @@
     ".ini", 
     ".xml", 
     ".pdf", 
-    ".txt"
+    ".txt,.sql"
   ], 
   "project-type": "Import from sources", 
   "postExecScript": "", 

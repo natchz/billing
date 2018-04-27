@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<fe:Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:clm54217="urn:un:unece:uncefact:codelist:specification:54217:2001" xmlns:clm66411="urn:un:unece:uncefact:codelist:specification:66411:2001" xmlns:clmIANAMIMEMediaType="urn:un:unece:uncefact:codelist:specification:IANAMIMEMediaType:2003" xmlns:ds="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:fe="http://www.dian.gov.co/contratos/facturaelectronica/v1" xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2" xmlns:sts="http://www.dian.gov.co/contratos/facturaelectronica/v1/Structures" xmlns:udt="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2" xmlns:xades="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ext:UBLExtensions>
+    <ext:UBLExtension>
+      <ext:ExtensionContent>
+        <sts:DianExtensions>
+          <sts:InvoiceControl>
+            <sts:InvoiceAuthorization>t:NumericType | | xsd: decimal),</sts:InvoiceAuthorization>
+            <sts:AuthorizationPeriod>
+              <cbc:StartDate/>
+              <cbc:EndDate/>
+            </sts:AuthorizationPeriod>
+            <sts:AuthorizedInvoices>
+              <sts:Prefix/>
+              <sts:From/>
+              <sts:To/>
+            </sts:AuthorizedInvoices>
+          </sts:InvoiceControl>
+          <sts:InvoiceSource>
+            <cbc:IdentificationCode>qdt:CountryIdentificationCodeType || xsd:string)</cbc:IdentificationCode>
+          </sts:InvoiceSource>
+          <sts:SoftwareProvider>
+            <sts:ProviderID/>
+            <sts:SoftwareID>123</sts:SoftwareID>
+          </sts:SoftwareProvider>
+          <sts:SoftwareSecurityCode>321321</sts:SoftwareSecurityCode>
+        </sts:DianExtensions>
+      </ext:ExtensionContent>
+    </ext:UBLExtension>
+    <ext:UBLExtension>
+      <ext:ExtensionContent/>
+    </ext:UBLExtension>
+  </ext:UBLExtensions>
+  <cbc:UBLVersionID/>
+  <cbc:CustomizationID/>
+  <cbc:ProfileID/>
+  <cbc:ID/>
+  <cbc:UUID schemeName="CUFE" schemeAgencyName="CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)" schemeAgencyID="195" schemeURI="http://www.dian.gov.co/contratos/facturaelectronica/v1/anexo_v1_0.pdf#CUFE"/>
+  <cbc:IssueDate/>
+  <cbc:IssueTime/>
+  <cbc:InvoiceTypeCode listAgencyName="CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)" listAgencyID="195" listSchemeURI="http://www.dian.gov.co/contratos/facturaelectronica/v1/InvoiceType"/>
+  <cbc:Note/>
+  <cbc:DocumentCurrencyCode>COP</cbc:DocumentCurrencyCode>
+  <fe:AccountingSupplierParty>
+    <cbc:AdditionalAccountID>codigo tipo perosna</cbc:AdditionalAccountID>
+    <fe:Party>
+      <cac:PartyIdentification>
+        <cbc:ID schemeAgencyName="CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)" schemeAgencyID="195" schemeID="31"/>
+      </cac:PartyIdentification>
+      <cac:PartyName>
+        <cbc:Name/>
+      </cac:PartyName>
+      <fe:PhysicalLocation>
+        <fe:Address>
+          <cbc:CitySubdivisionName/>
+          <cbc:CityName>BOGOTA-BOGOTA;D.C.</cbc:CityName>
+          <cbc:CountrySubentity/>
+          <cac:AddressLine>
+            <cbc:Line>LESOTO mall Av. 1 street</cbc:Line>
+          </cac:AddressLine>
+          <cac:Country>
+            <cbc:IdentificationCode>LS</cbc:IdentificationCode>
+          </cac:Country>
+        </fe:Address>
+      </fe:PhysicalLocation>
+      <fe:PartyTaxScheme>
+        <cbc:TaxLevelCode>regimen simp,com,no</cbc:TaxLevelCode>
+        <cac:TaxScheme/>
+      </fe:PartyTaxScheme>
+      <fe:PartyLegalEntity>
+        <cbc:RegistrationName>PJ - 700085375</cbc:RegistrationName>
+      </fe:PartyLegalEntity>
+    </fe:Party>
+  </fe:AccountingSupplierParty>
+  <fe:AccountingCustomerParty>
+    <cbc:AdditionalAccountID>persona natural u otr??o</cbc:AdditionalAccountID>
+    <fe:Party>
+      <cac:PartyIdentification>
+        <cbc:ID schemeAgencyName="CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)" schemeAgencyID="195" schemeID="31"/>
+      </cac:PartyIdentification>
+      <cac:PartyName>PJ - 700085375 - Adquiriente FE</cac:PartyName>
+      <fe:PhysicalLocation>
+        <fe:Address>
+          <cbc:CitySubdivisionName/>
+          <cbc:CityName>BOGOTA-BOGOTA;D.C.</cbc:CityName>
+          <cbc:CountrySubentity/>
+          <cac:AddressLine>
+            <cbc:Line></cbc:Line>
+          </cac:AddressLine>
+          <cac:Country>
+            <cbc:IdentificationCode>Colombia</cbc:IdentificationCode>
+          </cac:Country>
+        </fe:Address>
+      </fe:PhysicalLocation>
+      <fe:PartyTaxScheme>
+        <cbc:TaxLevelCode>simp.com. codigo</cbc:TaxLevelCode>
+        <cac:TaxScheme/>
+      </fe:PartyTaxScheme>
+      <fe:PartyLegalEntity>
+        <cbc:RegistrationName>PJ - 700085375</cbc:RegistrationName>
+      </fe:PartyLegalEntity>
+      <fe:Person>
+        <cbc:FirstName>Kobe</cbc:FirstName>
+        <cbc:FamilyName>Bryant</cbc:FamilyName>
+        <cbc:MiddleName/>
+      </fe:Person>
+    </fe:Party>
+  </fe:AccountingCustomerParty>
+  <fe:TaxTotal>
+    <cbc:TaxAmount currencyID="COP"/>
+    <cbc:TaxEvidenceIndicator>true or false</cbc:TaxEvidenceIndicator>
+    <fe:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="COP"/>
+      <cbc:TaxAmount currencyID="COP"/>
+      <cbc:Percent/>
+      <cac:TaxCategory>
+        <cac:TaxScheme>
+          <cbc:ID/>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </fe:TaxSubtotal>
+  </fe:TaxTotal>
+  <fe:LegalMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="COP"/>
+    <cbc:TaxExclusiveAmount currencyID="COP"/>
+    <cbc:PayableAmount currencyID="COP"/>
+  </fe:LegalMonetaryTotal>
+  <fe:InvoiceLine>
+    <cbc:ID>lidocaine</cbc:ID>
+    <cbc:InvoicedQuantity>1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="COP"/>
+    <fe:Item>
+      <cbc:Description>lidocaine</cbc:Description>
+    </fe:Item>
+    <fe:Price>
+      <cbc:PriceAmount currencyID="COP">321321.000</cbc:PriceAmount>
+    </fe:Price>
+  </fe:InvoiceLine>
+  <fe:InvoiceLine>
+    <cbc:ID>propofol</cbc:ID>
+    <cbc:InvoicedQuantity>1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="COP"/>
+    <fe:Item>
+      <cbc:Description>propofol</cbc:Description>
+    </fe:Item>
+    <fe:Price>
+      <cbc:PriceAmount currencyID="COP">1212.000</cbc:PriceAmount>
+    </fe:Price>
+  </fe:InvoiceLine>
+</fe:Invoice>

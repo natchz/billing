@@ -1,4 +1,4 @@
-from fetch_invoices import get_invoices,get_credit_notes,get_debit_notes
+from fetch_invoices import psql_invoices
 from webservice import ws_send_invoice
 from datetime import datetime
 from os import listdir
@@ -11,7 +11,8 @@ DEBIT_FILES = format('debit_notes/{}/'.format(TODAY))
 CREDIT_FILES = format('credit_notes/{}/'.format(TODAY))
 
 #--for invoices
-get_invoices()
+#get_invoices()
+psql_invoices()
 for zip_file in listdir(INVOICE_FILES):
     if zip_file.endswith(".zip"):
         ws_send_invoice(INVOICE_FILES+zip_file)

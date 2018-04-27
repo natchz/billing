@@ -48,7 +48,8 @@ sts_e = ElementMaker(
     nsmap=NSMAP
 )
 
-def invoice_to_xml(invoice_id, client, items, issuer):
+def invoice_to_xml(invoice,lines, party,cufe, issuer):
+    print(party)
     # http://forums.whirlpool.net.au/archive/197578
     # Global Attributes
     uuid_att = {"schemeAgencyID": "195"
@@ -95,13 +96,13 @@ def invoice_to_xml(invoice_id, client, items, issuer):
             , cbc_e.IssueTime()
             , cbc_e.InvoiceTypeCode(invoice_type_code_att)
             , cbc_e.Note()
-            , cbc_e.DocumentCurrencyCode("COP")
+            , cbc_e.DocumentCurrencyCode(invoice["currency"])
             , fe_e.AccountingSupplierParty(
                 cbc_e.AdditionalAccountID("codigo tipo perosna")
                 , fe_e.Party(cac_e.PartyIdentification(cbc_e.ID(party_identification_id_att))
                              , cac_e.PartyName(cbc_e.Name)
                              , fe_e.PhysicalLocation(fe_e.Address(cbc_e.CitySubdivisionName
-                                                                  , cbc_e.CityName("bogota")
+                                                                  , cbc_e.CityName(party["subdivision"])
                                                                   , cbc_e.CountrySubentity
                                                                   , cac_e.AddressLine(
                             cbc_e.Line("LESOTO mall Av. 1 street"))
@@ -116,19 +117,19 @@ def invoice_to_xml(invoice_id, client, items, issuer):
                                                         , cac_e.PartyName("PJ - 700085375 - Adquiriente FE")
                                                         , fe_e.PhysicalLocation(fe_e.Address(cbc_e.CitySubdivisionName
                                                                                              , cbc_e.CityName(
-                            client["client_city"])
+                            party["subdivision"])
                                                                                              , cbc_e.CountrySubentity
                                                                                              , cac_e.AddressLine(
-                            cbc_e.Line(client["client_address_1"]))
+                            cbc_e.Line(party["address"]))
                                                                                              , cac_e.Country(
-                            cbc_e.IdentificationCode(client["client_country"]))
+                            cbc_e.IdentificationCode(party["country"]))
                                                                                              )),
                                                         fe_e.PartyTaxScheme(cbc_e.TaxLevelCode("simp.com. codigo"),
                                                                             cac_e.TaxScheme)
                                                         ,
                                                         fe_e.PartyLegalEntity(cbc_e.RegistrationName("PJ - 700085375"))
-                                                        , fe_e.Person(cbc_e.FirstName(client["client_name"])
-                                                                      , cbc_e.FamilyName(client["client_surname"])
+                                                        , fe_e.Person(cbc_e.FirstName(party["name"])
+                                                                      , cbc_e.FamilyName(party["lastname"])
                                                                       , cbc_e.MiddleName)))
             , fe_e.TaxTotal(cbc_e.TaxAmount(tax_amount_att)
                             ,cbc_e.TaxEvidenceIndicator("true or false")
@@ -145,21 +146,21 @@ def invoice_to_xml(invoice_id, client, items, issuer):
                     ,cbc_e.PayableAmount(tax_amount_att))
 
             , *[fe_e.InvoiceLine(
-                cbc_e.ID("{}".format(item["item_name"]))
-                , cbc_e.InvoicedQuantity("{}".format(item["item_quantity"]))
+                cbc_e.ID("{}".format(line["name"]))
+                , cbc_e.InvoicedQuantity("{}".format(line["quantity"]))
                 , cbc_e.LineExtensionAmount(tax_amount_att)
-                , fe_e.Item(cbc_e.Description("{}".format(item["item_description"])))
-                , fe_e.Price(cbc_e.PriceAmount(tax_amount_att,"{}".format(item["item_price"])))
+                , fe_e.Item(cbc_e.Description("{}".format(line["description"])))
+                , fe_e.Price(cbc_e.PriceAmount(tax_amount_att,"{}".format(line["unit_price"])))
             )
-                for item in items
+                for line in lines
                 ]
 )
 
-    etree.ElementTree(root).write("invoices/{}/{}".format(TODAY, file_name(issuer["nit"], invoice_id)),
+    etree.ElementTree(root).write("invoices/{}/{}".format(TODAY, file_name(issuer["nit"], invoice["id"])),
                                   xml_declaration=True, encoding='UTF-8', standalone=False,
                                   pretty_print=True)
-    sign_invoice("invoices/{}/{}".format(TODAY, file_name(issuer["nit"], invoice_id)))
-    ws_zip_file("invoices/{}/".format(TODAY), file_name(issuer["nit"], invoice_id))
+    sign_invoice("invoices/{}/{}".format(TODAY, file_name(issuer["nit"], invoice["id"])))
+    ws_zip_file("invoices/{}/".format(TODAY), file_name(issuer["nit"], invoice["id"]))
 
 def get_xpath():
     from lxml import etree
