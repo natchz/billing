@@ -48,8 +48,7 @@ sts_e = ElementMaker(
     nsmap=NSMAP
 )
 
-def invoice_to_xml(invoice,lines, party,cufe, issuer):
-    print(party)
+def invoice_to_xml(invoice, lines,party,issuer,cufe):
     # http://forums.whirlpool.net.au/archive/197578
     # Global Attributes
     uuid_att = {"schemeAgencyID": "195"

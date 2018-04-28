@@ -3,20 +3,14 @@ from datetime import datetime
 from db.model import *
 from lxml.builder import ElementMaker
 from lxml import etree
-import signxml
-from signxml import XMLSigner
 from os import remove
 import subprocess
 
 TODAY = datetime.today().date()
 
-def invoice_datetime_java_format(invoice_id):
-    invoice = IpInvoices.get(IpInvoices.invoice == invoice_id)
-    inv_date = invoice.invoice_date_created
-    inv_time = invoice.invoice_time_created
-    inv_datetime = datetime.combine(inv_date,inv_time)
+def invoice_datetime_java_format(create_date):
     java_format = "%Y%m%d%H%M%S"
-    return datetime.strftime(inv_datetime,java_format)
+    return datetime.strftime(create_date,java_format)
 
 def hash(hash_type, input_text):
     '''Hash input_text with the algorithm choice'''
@@ -41,38 +35,20 @@ GROUP BY item_tax_rate_id
         return result
     return result[0]
 
-def CUFE(invoice_id):
+def CUFE(invoice, invoice_lines,invoice_party,issuer):
 
-    cursor = database.execute_sql("""
-SELECT i.invoice_number,ia.invoice_item_subtotal,id.nit,
-case when cc.client_custom_fieldid = 3 and cc.client_custom_fieldvalue = ''
-then "01"
-when cc.client_custom_fieldid = 3 and cc.client_custom_fieldvalue = 7
-then "01"
-when cc.client_custom_fieldid = 3 and cc.client_custom_fieldvalue = 8
-then "02"
-end,cl.client_vat_id, "tec_key"
-FROM ip_invoices AS i, ip_clients AS cl, ip_invoice_amounts AS ia, ip_invoice_tax_rates it, issuerdata AS id,
-ip_client_custom AS cc
-WHERE i.invoice_id = {} AND i.client_id = cl.client_id AND ia.invoice_id = i.invoice_id AND cc.client_id = cl.client_id
-LIMIT 1
-""".format(invoice_id))
-    data = cursor.fetchone()
-    tax_1 = total_taxes(invoice_id,1)
-    tax_2 = total_taxes(invoice_id,2)
-    tax_3 = total_taxes(invoice_id,3)
-    cufe = hash('SHA1', "{}{}{}{}{}{}{}{}{}{}{}{}{}".format(data[0],
-                                                            invoice_datetime_java_format(invoice_id),
-                                                            data[1],
-                                                            "01",tax_1,
-                                                            "02" ,tax_2,
-                                                            "03",tax_3,
-                                                            tax_1,
-                                                            data[2],
-                                                            data[3],
-                                                            data[4],
-                                                            data[5]).encode('utf-8'))
-    return data,cufe,tax_1,(tax_2+tax_3),(tax_1+tax_2+tax_3)
+    cufe = hash('SHA1', "{}{}{}{}{}{}{}{}{}{}{}{}{}".format(invoice["number"],
+                                                            invoice_datetime_java_format(invoice["create_date"]),
+                                                            invoice["number"],
+                                                            "01","tax",
+                                                            "02" ,"tax",
+                                                            "03","tax",
+                                                            "tax",
+                                                            issuer["nit"],
+                                                            invoice_party["name"],
+                                                            invoice_party["name"],
+                                                            invoice_party["name"]).encode('utf-8'))
+    return cufe
 
 def sign_invoice(fname):
     print(fname)

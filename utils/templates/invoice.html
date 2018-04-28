@@ -163,7 +163,7 @@
   <body>
     <div id="wrapper">
       <header>
-        <h1>Invoice</h1>
+        <h1>Facturacion TYR</h1>
 
         <address >
                     <p><br>  {{issuer.key}}  </p>
@@ -187,30 +187,30 @@
       <article>
         <h1>Recipient</h1>
         <address >
-          <p>Front Invoice<br>Inc</p>
+          <p>TYR Tecnologia y Resultados<br>Inc</p>
         </address>
         <table class="meta">
           <tr>
-            <th><span >Invoice #</span></th>
-            <td><span >{{invoice.invoice}}</span></td>
+            <th><span >Factura #</span></th>
+            <td><span >{{invoice.number}}</span></td>
           </tr>
           <tr>
-            <th><span >Date</span></th>
+            <th><span >Fecha</span></th>
             <td><span >{{invoice.create_date}}</span></td>
           </tr>
           <tr>
-            <th><span >Amount Due</span></th>
+            <th><span >Monto vencido</span></th>
             <td><span id="prefix" >$</span><span>{{lines.quantity}}</span></t                                                                                        d>
           </tr>
         </table>
         <table class="inventory">
           <thead>
             <tr>
-              <th><span >Item</span></th>
-              <th><span >Description</span></th>
-              <th><span >Rate</span></th>
-              <th><span >Quantity</span></th>
-              <th><span >Price</span></th>
+              <th><span >Elemento</span></th>
+              <th><span >Descripcion</span></th>
+              <th><span >Impuesto</span></th>
+              <th><span >Cantidad</span></th>
+              <th><span >Precio</span></th>
             </tr>
           </thead>
           <tbody>
@@ -230,28 +230,28 @@
         <a class="add">+</a>
         <table class="balance">
                <tr>
-            <th><span >Tax Total</span></th>
-            <td><span data-prefix>$</span><span>{{lines.unit_price}}</span></td>
+            <th><span >Total Impuestos</span></th>
+            <td><span data-prefix>$</span><span>{{taxes | sum(attribute='amount')}}</span></td>
           </tr>
           <tr>
           <tr>
             <th><span >Total</span></th>
-            <td><span data-prefix>$</span><span>{{lines.unit_price}}</span></td>
+            <td><span data-prefix>$</span><span>{{lines | sum(attribute='unit_price')}}</span></td>
           </tr>
           <tr>
-            <th><span >Amount Paid</span></th>
-            <td><span data-prefix>$</span><span >{{lines.unit_price}}</span></td>
+            <th><span >Pagado</span></th>
+            <td><span data-prefix>$</span><span >{{lines | sum(attribute='unit_price')}}</span></td>
           </tr>
           <tr>
-            <th><span >Balance Due</span></th>
-            <td><span data-prefix>$</span><span>{{lines.unit_price}}</span></td>
+            <th><span >Balance</span></th>
+            <td><span data-prefix>$</span><span>0</span></td>
           </tr>
         </table>
       </article>
       <aside>
-        <h1><span >Additional Notes</span></h1>
+        <h1><span >Notas adicionales</span></h1>
         <div >
-          <p>A finance charge of 1.5% will be made on unpaid balances after 30 d                                                                                        ays.</p>
+          <p>Los terminos asociados a esta factura seran validos.                                                                                        ays.</p>
         </div>
       </aside>
     </div>

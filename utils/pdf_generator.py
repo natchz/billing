@@ -3,7 +3,7 @@ from xml.sax.saxutils import prepare_input_source
 import pdfkit
 from jinja2 import Environment, FileSystemLoader, Template, meta
 
-def loader(invoice,invoice_party,invoice_lines,issuer,cufe):
+def loader(invoice, invoice_lines,invoice_party,issuer,cufe):
 
     temp_name = "invoice.html"
     #path_wkthmltopdf = r'/usr/bin/wkthmltopdf'

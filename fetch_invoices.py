@@ -11,18 +11,19 @@ TODAY = datetime.today().date()
 
 issuer = {"soft_id":"123","soft_security_code":"321321","nit":"00000809-12"}
 
-def psql_invoices():
+def psql_invoices(TODAY):
 
-    invoices = get_invoices('2018-04-27')
+    invoices = get_invoices(TODAY)
     for invoice in invoices:
-        #cufe = CUFE(invoice["invoice"])
         cufe = "dummycufe"
         invoice_party = get_party(invoice["party"])[0] #0 as only need first element of party
         invoice_lines = get_invoice_lines(invoice["id"])
-        invoice_to_xml(invoice, invoice_lines,invoice_party,cufe,issuer)
+        invoice_taxes = get_invoice_taxes(invoice["id"])
+        cufe = CUFE(invoice, invoice_lines,invoice_party,issuer)
+        invoice_to_xml(invoice, invoice_lines,invoice_party,issuer,cufe)
         create_qr({"CUFE":"dummycufe"})
         #create_qr(get_qr_data(invoice))
-        loader(invoice,invoice_party,invoice_lines,issuer,cufe)
+        loader(invoice, invoice_lines,invoice_party,issuer,cufe)
 
 """
 def get_debit_notes():

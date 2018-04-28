@@ -5,13 +5,16 @@ ail.unit,
 ail.invoice,
 pt.name,
 ail.description, 
-ail.create_date, 
 ail.note, 
-ail.product, 
-ail.company, 
-ail.origin,
 ail.unit_price,
-ail.write_date,
-ail.invoice_type
+ail.invoice_type,
+ait.description,
+ait.amount,
+ait.base,
+ait.tax,
+ait.tax_code
 FROM public.account_invoice_line ail
 JOIN product_template pt on pt.id = ail.product
+JOIN account_invoice_line_account_tax aiat on aiat.line = ail.id
+JOIN account_invoice_tax ait on ait.tax = aiat.tax
+

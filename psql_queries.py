@@ -56,19 +56,21 @@ ail.unit,
 ail.invoice,
 pt.name,
 ail.description,
-ail.create_date,
 ail.note,
-ail.product,
-ail.company,
-ail.origin,
 ail.unit_price,
-ail.write_date,
-ail.invoice_type
+ail.invoice_type,
+ait.description,
+ait.amount,
+ait.base,
+ait.tax,
+ait.tax_code
 FROM public.account_invoice_line ail
 JOIN product_template pt on pt.id = ail.product
+JOIN account_invoice_line_account_tax aiat on aiat.line = ail.id
+JOIN account_invoice_tax ait on ait.tax = aiat.tax
 where  ail.invoice = %(invoice_id)s""",{"invoice_id":number})
     except:
-        print("I can't SELECT invoices lines from health321 for invoice id {}".format(number))
+        print("I can't SELECT invoices taxes from health321 for invoice id {}".format(number))
     dict_result = []
     for row in cur:
         dict_result.append(dict(row))
@@ -97,11 +99,63 @@ where pp.id = %(invoice_id)s""",{"invoice_id":party_id})
         dict_result.append(dict(row))
     return dict_result
 
-def get_invoice_tax(invoice_number):
-    pass
 
-def get_issuer_info(data):
-    pass
+'''
+def get_invoice_taxes(invoice_id):
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    try:
+         cur.execute("""SELECT
+         id,
+         base_sign,
+         sequence,
+         write_uid,
+         write_date,
+         amount,
+         manual,
+         description,
+         invoice,
+         create_date,
+         base,
+         tax,
+         account,
+         tax_sign,
+         base_code,
+         create_uid,
+         tax_code
+         FROM public.account_invoice_tax
+         where invoice = %(invoice_id)s""",{"invoice_id":invoice_id})
+    except:
+        print("I can't SELECT invoices lines from health321 for invoice id {}".format(invoice_id))
+    dict_result = []
+    for row in cur:
+        dict_result.append(dict(row))
+    return dict_result
+'''
+
+def get_issuer(data):
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    try:
+         cur.execute("""SELECT
+         id,
+         write_uid,
+         header,
+         parent,
+         write_date,
+         currency,
+         create_date,
+         timezone,
+         party,
+         create_uid,
+         footer
+         FROM public.company_company;
+         """)
+    except:
+        print("I can't SELECT invoices lines from health321 for invoice id {}".format(invoice_id))
+    dict_result = []
+    for row in cur:
+        dict_result.append(dict(row))
+    return dict_result
+
 
 if __name__ == '__main__':
     invoice = get_invoices('2018-04-27')
