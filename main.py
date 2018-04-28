@@ -13,9 +13,10 @@ CREDIT_FILES = format('credit_notes/{}/'.format(TODAY))
 #--for invoices
 #get_invoices()
 psql_invoices()
-for zip_file in listdir(INVOICE_FILES):
-    if zip_file.endswith(".zip"):
-        ws_send_invoice(INVOICE_FILES+zip_file)
+
+#for zip_file in listdir(INVOICE_FILES):
+#    if zip_file.endswith(".zip"):
+#        ws_send_invoice(INVOICE_FILES+zip_file)
 
 """
 #--for debit notes

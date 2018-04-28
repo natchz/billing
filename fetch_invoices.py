@@ -20,9 +20,9 @@ def psql_invoices():
         invoice_party = get_party(invoice["party"])[0] #0 as only need first element of party
         invoice_lines = get_invoice_lines(invoice["id"])
         invoice_to_xml(invoice, invoice_lines,invoice_party,cufe,issuer)
-        #invoice_to_xml(invoice["invoice"], client, items,issuer)
-        #create_qr(get_qr_data(invoice["invoice"]))
-        #loader(invoice,client,items,amounts,issuer,cufe)
+        create_qr({"CUFE":"dummycufe"})
+        #create_qr(get_qr_data(invoice))
+        loader(invoice,invoice_party,invoice_lines,issuer,cufe)
 
 """
 def get_debit_notes():

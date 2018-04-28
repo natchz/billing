@@ -88,7 +88,7 @@
       table.meta th { width: 40%; }
       table.meta td { width: 60%; }
 
-      /* table items */
+      /* table lines */
 
       table.inventory { clear: both; width: 100%; }
       table.inventory th { font-weight: bold; text-align: center; }
@@ -175,11 +175,11 @@
   </span>
       </header>
       <pr>    <br></pr>
-      <pr>{{client.client_name}},{{client.client_surname}} <br></pr>
+      <pr>{{party.name}},{{party.lastname}} <br></pr>
 
-      <pr>{{client.client_vat}}          <br></pr>
- <pr>{{client.client_address_1}} <br></pr>
-       <pr>{{client.client_email}} <br></pr>
+      <pr>{{party.party_vat}}          <br></pr>
+ <pr>{{party.party_address_1}} <br></pr>
+       <pr>{{party.party_email}} <br></pr>
 
 
 
@@ -192,15 +192,15 @@
         <table class="meta">
           <tr>
             <th><span >Invoice #</span></th>
-            <td><span >{{invoice.invoice_number}}</span></td>
+            <td><span >{{invoice.invoice}}</span></td>
           </tr>
           <tr>
             <th><span >Date</span></th>
-            <td><span >{{invoice.invoice_date_created}}</span></td>
+            <td><span >{{invoice.create_date}}</span></td>
           </tr>
           <tr>
             <th><span >Amount Due</span></th>
-            <td><span id="prefix" >$</span><span>{{amounts.invoice_balance}}</span></t                                                                                        d>
+            <td><span id="prefix" >$</span><span>{{lines.quantity}}</span></t                                                                                        d>
           </tr>
         </table>
         <table class="inventory">
@@ -214,13 +214,13 @@
             </tr>
           </thead>
           <tbody>
-              {% for item in items %}
+              {% for line in lines %}
             <tr>
-              <td>{{item.item}}</td>
-              <td>{{item.item_description}}</td>
-              <td>{{item.item_tax_rate}}</td>
-              <td>{{item.item_quantity}}</td>
-              <td>{{item.item_price}}</td>
+              <td>{{line.name}}</td>
+              <td>{{line.description}}</td>
+              <td>{{line.item_tax_rate}}</td>
+              <td>{{line.quantity}}</td>
+              <td>{{line.unit_price}}</td>
             </tr>
               {% endfor %}
           </tbody>
@@ -231,20 +231,20 @@
         <table class="balance">
                <tr>
             <th><span >Tax Total</span></th>
-            <td><span data-prefix>$</span><span>{{amounts.invoice_item_tax_total}}</span></td>
+            <td><span data-prefix>$</span><span>{{lines.unit_price}}</span></td>
           </tr>
           <tr>
           <tr>
             <th><span >Total</span></th>
-            <td><span data-prefix>$</span><span>{{amounts.invoice_total}}</span></td>
+            <td><span data-prefix>$</span><span>{{lines.unit_price}}</span></td>
           </tr>
           <tr>
             <th><span >Amount Paid</span></th>
-            <td><span data-prefix>$</span><span >{{amounts.invoice_paid}}</span></td>
+            <td><span data-prefix>$</span><span >{{lines.unit_price}}</span></td>
           </tr>
           <tr>
             <th><span >Balance Due</span></th>
-            <td><span data-prefix>$</span><span>{{amounts.invoice_balance}}</span></td>
+            <td><span data-prefix>$</span><span>{{lines.unit_price}}</span></td>
           </tr>
         </table>
       </article>

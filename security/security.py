@@ -76,7 +76,7 @@ LIMIT 1
 
 def sign_invoice(fname):
     print(fname)
-    subprocess.check_call(["java","-jar","java_xades/xades_signer_v1.0.0.jar",fname,fname+"_signed"])
+    subprocess.check_call(["java","-jar","java_xades/xades_v1.2_linux_signer.jar",fname,fname+"_signed"])
     xml_fn = open(fname+"_signed", "rb").read()
     root = etree.fromstring(xml_fn)
     ns = {"ext": "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"}
